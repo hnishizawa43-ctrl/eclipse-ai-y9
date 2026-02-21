@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { useState } from "react"
 
-interface Vulnerability {
+export interface Vulnerability {
   id: string
   title: string
   model: string
@@ -13,9 +13,10 @@ interface Vulnerability {
   status: "open" | "mitigated" | "investigating"
   discoveredAt: string
   cvss: number
+  isNew?: boolean
 }
 
-const vulnerabilities: Vulnerability[] = [
+const defaultVulnerabilities: Vulnerability[] = [
   {
     id: "VLN-001",
     title: "システムプロンプト上書きによるインジェクション",
@@ -115,17 +116,22 @@ const statusConfig = {
   mitigated: { className: "bg-success/15 text-success border-success/30" },
 }
 
-export function ScanResultsTable() {
+interface ScanResultsTableProps {
+  extraVulnerabilities?: Vulnerability[]
+}
+
+export function ScanResultsTable({ extraVulnerabilities = [] }: ScanResultsTableProps) {
   const [filter, setFilter] = useState<"all" | "critical" | "high" | "medium" | "low">("all")
 
-  const filtered = filter === "all" ? vulnerabilities : vulnerabilities.filter(v => v.severity === filter)
+  const allVulnerabilities = [...extraVulnerabilities, ...defaultVulnerabilities]
+  const filtered = filter === "all" ? allVulnerabilities : allVulnerabilities.filter(v => v.severity === filter)
 
   return (
     <div className="rounded-lg border border-border bg-card">
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
         <div>
           <h3 className="text-sm font-semibold text-foreground">スキャン結果</h3>
-          <p className="text-xs text-muted-foreground">{vulnerabilities.length}件の脆弱性を検出</p>
+          <p className="text-xs text-muted-foreground">{allVulnerabilities.length}件の脆弱性を検出</p>
         </div>
         <div className="flex items-center gap-2">
           {(["all", "critical", "high", "medium", "low"] as const).map((level) => (
@@ -159,8 +165,21 @@ export function ScanResultsTable() {
           </thead>
           <tbody>
             {filtered.map((vuln) => (
-              <tr key={vuln.id} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
-                <td className="px-5 py-3 text-xs font-mono text-primary">{vuln.id}</td>
+              <tr
+                key={vuln.id + vuln.title}
+                className={cn(
+                  "border-b border-border/50 transition-colors",
+                  vuln.isNew
+                    ? "bg-primary/5 animate-in fade-in slide-in-from-top-2 duration-500"
+                    : "hover:bg-secondary/30"
+                )}
+              >
+                <td className="px-5 py-3 text-xs font-mono text-primary">
+                  <span className="flex items-center gap-1.5">
+                    {vuln.isNew && <span className="inline-flex h-1.5 w-1.5 rounded-full bg-primary" />}
+                    {vuln.id}
+                  </span>
+                </td>
                 <td className="px-5 py-3">
                   <span className="text-sm text-foreground">{vuln.title}</span>
                 </td>

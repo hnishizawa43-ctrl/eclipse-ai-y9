@@ -13,10 +13,43 @@ const scanTypes = [
   { id: "bias", label: "バイアス検出", description: "出力の公平性とバイアスの分析" },
 ]
 
-export function ScanRunner() {
+export interface ScanResult {
+  id: string
+  title: string
+  model: string
+  category: string
+  severity: "critical" | "high" | "medium" | "low"
+  status: "open" | "investigating"
+  discoveredAt: string
+  cvss: number
+}
+
+const newFindings: Record<string, ScanResult[]> = {
+  injection: [
+    { id: "VLN-NEW", title: "Unicode制御文字によるフィルター回避", model: "GPT-4 本番環境", category: "インジェクション", severity: "high", status: "open", discoveredAt: "", cvss: 8.4 },
+    { id: "VLN-NEW", title: "マルチターン会話でのコンテキスト操作", model: "Claude-3 内部用", category: "インジェクション", severity: "medium", status: "open", discoveredAt: "", cvss: 6.3 },
+  ],
+  leakage: [
+    { id: "VLN-NEW", title: "Few-shot例文からの個人情報推定", model: "カスタマーサポートBot", category: "プライバシー", severity: "critical", status: "open", discoveredAt: "", cvss: 9.3 },
+  ],
+  adversarial: [
+    { id: "VLN-NEW", title: "微小摂動による分類結果反転", model: "Vision Model v2", category: "敵対的攻撃", severity: "high", status: "investigating", discoveredAt: "", cvss: 7.9 },
+  ],
+  bias: [
+    { id: "VLN-NEW", title: "年齢属性に基づく出力スコア偏差", model: "採用評価AI", category: "公平性", severity: "medium", status: "investigating", discoveredAt: "", cvss: 5.8 },
+  ],
+}
+
+interface ScanRunnerProps {
+  onScanComplete: (results: ScanResult[]) => void
+}
+
+export function ScanRunner({ onScanComplete }: ScanRunnerProps) {
   const [scanning, setScanning] = useState(false)
   const [progress, setProgress] = useState(0)
+  const [completed, setCompleted] = useState(false)
   const [selectedScans, setSelectedScans] = useState<string[]>(["injection", "leakage"])
+  const [foundCount, setFoundCount] = useState(0)
 
   const toggleScan = (id: string) => {
     setSelectedScans(prev =>
@@ -27,14 +60,41 @@ export function ScanRunner() {
   const runScan = () => {
     setScanning(true)
     setProgress(0)
+    setCompleted(false)
+    setFoundCount(0)
+
     const interval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) {
           clearInterval(interval)
-          setTimeout(() => setScanning(false), 500)
+
+          const now = new Date().toLocaleString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" }).replace(/\//g, "-")
+          let counter = 1
+          const results: ScanResult[] = []
+          selectedScans.forEach(scanId => {
+            const findings = newFindings[scanId] || []
+            findings.forEach(f => {
+              results.push({
+                ...f,
+                id: `VLN-${String(100 + counter).padStart(3, "0")}`,
+                discoveredAt: now,
+              })
+              counter++
+            })
+          })
+
+          setFoundCount(results.length)
+          onScanComplete(results)
+
+          setTimeout(() => {
+            setScanning(false)
+            setCompleted(true)
+            setTimeout(() => setCompleted(false), 4000)
+          }, 500)
+
           return 100
         }
-        return prev + Math.random() * 15
+        return prev + Math.random() * 12
       })
     }, 300)
   }
@@ -79,6 +139,15 @@ export function ScanRunner() {
             <span className="text-xs font-mono text-primary">{Math.min(100, Math.round(progress))}%</span>
           </div>
           <Progress value={Math.min(100, progress)} className="h-1.5 bg-secondary" />
+        </div>
+      )}
+
+      {completed && (
+        <div className="mb-4 flex items-center gap-2 rounded-md border border-success/30 bg-success/10 p-3">
+          <CheckCircle2 className="h-4 w-4 text-success" />
+          <span className="text-xs text-success">
+            スキャン完了 - {foundCount}件の新しい脆弱性を検出しました
+          </span>
         </div>
       )}
 
