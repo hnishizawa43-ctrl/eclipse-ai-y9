@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
-import { Shield, ArrowRight, Scan, Activity, FileCheck, AlertTriangle, Zap, Lock, Eye } from "lucide-react"
+import { Shield, Scan, Activity, FileCheck, AlertTriangle, Zap, Lock, Eye } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 function useCountUp(end: number, duration: number = 2000, suffix: string = "") {
@@ -34,32 +34,6 @@ function useCountUp(end: number, duration: number = 2000, suffix: string = "") {
   }, [end, duration, suffix])
 
   return { value, ref }
-}
-
-const LINE_CONFIGS = [
-  { width: 72, top: 15, left: 8, duration: 4.2 },
-  { width: 65, top: 38, left: 14, duration: 3.7 },
-  { width: 80, top: 55, left: 3, duration: 4.8 },
-  { width: 68, top: 72, left: 11, duration: 3.4 },
-  { width: 75, top: 25, left: 6, duration: 4.5 },
-  { width: 62, top: 85, left: 17, duration: 3.9 },
-  { width: 78, top: 48, left: 9, duration: 4.1 },
-]
-
-function AnimatedLine({ delay, index }: { delay: number; index: number }) {
-  const config = LINE_CONFIGS[index % LINE_CONFIGS.length]
-  return (
-    <div
-      className="absolute h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"
-      style={{
-        width: `${config.width}%`,
-        top: `${config.top}%`,
-        left: `${config.left}%`,
-        animation: `pulse ${config.duration}s ease-in-out ${delay}s infinite`,
-        opacity: 0.15,
-      }}
-    />
-  )
 }
 
 export default function LandingPage() {
@@ -105,42 +79,20 @@ export default function LandingPage() {
               {"セキュリティ"}
             </a>
           </div>
-          <div className="flex items-center gap-3">
-            <Link href="/login">
-              <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
-                ログイン
-              </Button>
-            </Link>
-            <Link href="/login">
-              <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-                無料で始める
-              </Button>
-            </Link>
-          </div>
+          <Link href="/login">
+            <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
+              ログイン
+            </Button>
+          </Link>
         </div>
       </nav>
 
       {/* Hero */}
       <section className="relative flex min-h-screen items-center justify-center px-6 pt-16">
-        {/* Animated background lines */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          {[0, 0.5, 1, 1.5, 2, 2.5, 3].map((d, i) => (
-            <AnimatedLine key={i} delay={d} index={i} />
-          ))}
-        </div>
-
-        {/* Glow effect */}
-        <div
-          className="pointer-events-none absolute left-1/2 top-1/3 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 blur-3xl"
-          style={{ background: "radial-gradient(circle, var(--primary) 0%, transparent 70%)" }}
-        />
 
         <div className="relative z-10 mx-auto max-w-4xl text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-4 py-1.5 text-sm backdrop-blur-sm">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
-            </span>
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-4 py-1.5 text-sm">
+            <span className="inline-flex h-2 w-2 rounded-full bg-success" />
             <span className="text-muted-foreground">{"全システム稼働中"}</span>
           </div>
 
@@ -156,19 +108,7 @@ export default function LandingPage() {
             {"Eclipse は企業のAIモデルを24時間体制で監視し、脆弱性検出、コンプライアンス管理、インシデント対応をひとつのプラットフォームに統合します。"}
           </p>
 
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link href="/login">
-              <Button size="lg" className="h-12 gap-2 bg-primary px-8 text-base font-medium text-primary-foreground hover:bg-primary/90">
-                {"デモを試す"}
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-            <Link href="#features">
-              <Button size="lg" variant="outline" className="h-12 border-border px-8 text-base font-medium text-foreground hover:bg-card">
-                {"詳しく見る"}
-              </Button>
-            </Link>
-          </div>
+
 
           {/* Dashboard preview */}
           <div className="relative mx-auto mt-16 max-w-3xl">
@@ -197,19 +137,12 @@ export default function LandingPage() {
                   <div
                     key={i}
                     className="flex-1 rounded-t bg-primary/60"
-                    style={{
-                      height: `${h}%`,
-                      animation: `pulse ${2 + (i % 5) * 0.2}s ease-in-out ${i * 0.1}s infinite`,
-                    }}
+                    style={{ height: `${h}%` }}
                   />
                 ))}
               </div>
             </div>
-            {/* Glow under card */}
-            <div
-              className="pointer-events-none absolute -bottom-8 left-1/2 h-32 w-3/4 -translate-x-1/2 rounded-full opacity-20 blur-3xl"
-              style={{ background: "var(--primary)" }}
-            />
+
           </div>
         </div>
       </section>
@@ -248,7 +181,7 @@ export default function LandingPage() {
               {
                 icon: Scan,
                 title: "脆弱性スキャン",
-                desc: "プロンプトインジェクション、データ漏洩、敵対的攻撃、バイアス検出を自動でスキャン。CVSS準拠のスコアリングで優先度を明確化。",
+                desc: "プロンプ��インジェクション、データ漏洩、敵対的攻撃、バイアス検出を自動でスキャン。CVSS準拠のスコアリングで優先度を明確化。",
               },
               {
                 icon: Activity,
@@ -321,22 +254,13 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Visual */}
             <div className="relative flex items-center justify-center">
               <div className="relative h-72 w-72 sm:h-80 sm:w-80">
-                {/* Orbiting rings */}
-                <div className="absolute inset-0 animate-spin rounded-full border border-border/40" style={{ animationDuration: "20s" }}>
-                  <div className="absolute -top-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rounded-full bg-primary" />
-                </div>
-                <div className="absolute inset-6 animate-spin rounded-full border border-primary/20" style={{ animationDuration: "15s", animationDirection: "reverse" }}>
-                  <div className="absolute -bottom-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rounded-full bg-chart-2" />
-                </div>
-                <div className="absolute inset-12 animate-spin rounded-full border border-chart-2/20" style={{ animationDuration: "10s" }}>
-                  <div className="absolute -right-1.5 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-success" />
-                </div>
-                {/* Center */}
+                <div className="absolute inset-0 rounded-full border border-border/40" />
+                <div className="absolute inset-6 rounded-full border border-primary/20" />
+                <div className="absolute inset-12 rounded-full border border-chart-2/20" />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary/10 backdrop-blur-sm">
+                  <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary/10">
                     <Shield className="h-10 w-10 text-primary" />
                   </div>
                 </div>
@@ -350,22 +274,11 @@ export default function LandingPage() {
       <section className="border-t border-border">
         <div className="mx-auto max-w-4xl px-6 py-24 text-center">
           <h2 className="text-balance text-3xl font-bold tracking-tight sm:text-4xl">
-            {"AIリスク管理を、今日から始めましょう"}
+            {"AIリスク管理を、ここから始める"}
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-pretty text-muted-foreground">
-            {"無料トライアルでEclipseの全機能をお試しいただけます。クレジットカード不要。"}
+            {"Eclipseは企業のAIモデルを包括的に保護するセキュリティ・ガバナンスプラットフォームです。"}
           </p>
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link href="/login">
-              <Button size="lg" className="h-12 gap-2 bg-primary px-8 text-base font-medium text-primary-foreground hover:bg-primary/90">
-                {"無料トライアルを開始"}
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-            <Button size="lg" variant="outline" className="h-12 border-border px-8 text-base font-medium text-foreground hover:bg-card">
-              {"お問い合わせ"}
-            </Button>
-          </div>
         </div>
       </section>
 
