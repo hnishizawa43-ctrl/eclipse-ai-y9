@@ -36,15 +36,26 @@ function useCountUp(end: number, duration: number = 2000, suffix: string = "") {
   return { value, ref }
 }
 
-function AnimatedLine({ delay }: { delay: number }) {
+const LINE_CONFIGS = [
+  { width: 72, top: 15, left: 8, duration: 4.2 },
+  { width: 65, top: 38, left: 14, duration: 3.7 },
+  { width: 80, top: 55, left: 3, duration: 4.8 },
+  { width: 68, top: 72, left: 11, duration: 3.4 },
+  { width: 75, top: 25, left: 6, duration: 4.5 },
+  { width: 62, top: 85, left: 17, duration: 3.9 },
+  { width: 78, top: 48, left: 9, duration: 4.1 },
+]
+
+function AnimatedLine({ delay, index }: { delay: number; index: number }) {
+  const config = LINE_CONFIGS[index % LINE_CONFIGS.length]
   return (
     <div
       className="absolute h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"
       style={{
-        width: `${60 + Math.random() * 30}%`,
-        top: `${10 + Math.random() * 80}%`,
-        left: `${Math.random() * 20}%`,
-        animation: `pulse ${3 + Math.random() * 2}s ease-in-out ${delay}s infinite`,
+        width: `${config.width}%`,
+        top: `${config.top}%`,
+        left: `${config.left}%`,
+        animation: `pulse ${config.duration}s ease-in-out ${delay}s infinite`,
         opacity: 0.15,
       }}
     />
@@ -114,7 +125,7 @@ export default function LandingPage() {
         {/* Animated background lines */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           {[0, 0.5, 1, 1.5, 2, 2.5, 3].map((d, i) => (
-            <AnimatedLine key={i} delay={d} />
+            <AnimatedLine key={i} delay={d} index={i} />
           ))}
         </div>
 
@@ -182,13 +193,13 @@ export default function LandingPage() {
                 ))}
               </div>
               <div className="mx-4 mb-4 h-32 rounded-lg border border-border bg-secondary/30 flex items-end px-4 pb-4 gap-1">
-                {Array.from({ length: 24 }).map((_, i) => (
+                {[35, 52, 68, 45, 78, 62, 40, 55, 82, 48, 70, 58, 90, 42, 65, 75, 38, 85, 50, 72, 60, 88, 44, 76].map((h, i) => (
                   <div
                     key={i}
                     className="flex-1 rounded-t bg-primary/60"
                     style={{
-                      height: `${20 + Math.sin(i * 0.5) * 30 + Math.random() * 40}%`,
-                      animation: `pulse ${2 + Math.random()}s ease-in-out ${i * 0.1}s infinite`,
+                      height: `${h}%`,
+                      animation: `pulse ${2 + (i % 5) * 0.2}s ease-in-out ${i * 0.1}s infinite`,
                     }}
                   />
                 ))}
