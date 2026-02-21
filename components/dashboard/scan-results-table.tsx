@@ -3,6 +3,8 @@
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { useState } from "react"
+import { Download } from "lucide-react"
+import { toast } from "sonner"
 
 export interface Vulnerability {
   id: string
@@ -116,6 +118,22 @@ const statusConfig = {
   mitigated: { className: "bg-success/15 text-success border-success/30" },
 }
 
+function exportVulnCSV(vulns: Vulnerability[]) {
+  const header = "ID,タイトル,モデル,カテゴリ,深刻度,CVSS,ステータス,検出日時"
+  const rows = vulns.map((v) =>
+    [v.id, `"${v.title}"`, v.model, v.category, severityLabels[v.severity], v.cvss.toFixed(1), statusLabels[v.status], v.discoveredAt].join(",")
+  )
+  const csv = [header, ...rows].join("\n")
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
+  a.download = `eclipse_vulnerabilities_${new Date().toISOString().slice(0, 10)}.csv`
+  a.click()
+  URL.revokeObjectURL(url)
+  toast.success("脆弱性レポートをCSVでエクスポートしました")
+}
+
 interface ScanResultsTableProps {
   extraVulnerabilities?: Vulnerability[]
 }
@@ -134,6 +152,13 @@ export function ScanResultsTable({ extraVulnerabilities = [] }: ScanResultsTable
           <p className="text-xs text-muted-foreground">{allVulnerabilities.length}件の脆弱性を検出</p>
         </div>
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => exportVulnCSV(filtered)}
+            className="flex items-center gap-1.5 rounded-md border border-border bg-secondary px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors mr-2"
+          >
+            <Download className="h-3 w-3" />
+            CSV
+          </button>
           {(["all", "critical", "high", "medium", "low"] as const).map((level) => (
             <button
               key={level}

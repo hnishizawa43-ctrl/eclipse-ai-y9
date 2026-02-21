@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter, JetBrains_Mono } from 'next/font/google'
 import { AuthProvider } from '@/lib/auth-context'
+import { Toaster } from 'sonner'
 import './globals.css'
 
 const _inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body className={`${_inter.variable} ${_jetbrainsMono.variable} font-sans antialiased`}>
         <AuthProvider>
           {children}
+          <Toaster theme="dark" position="bottom-right" />
         </AuthProvider>
       </body>
     </html>

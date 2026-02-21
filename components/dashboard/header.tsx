@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Bell, Search, ShieldAlert, AlertTriangle, FileCheck, Info, X } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
@@ -40,11 +41,33 @@ const typeConfig = {
   success: { icon: Info, color: "text-success", bg: "bg-success/10" },
 }
 
+const SEARCH_RESULTS = [
+  { label: "概要ダッシュボード", href: "/dashboard" },
+  { label: "脆弱性スキャン", href: "/dashboard/vulnerabilities" },
+  { label: "リアルタイムモニタリング", href: "/dashboard/monitoring" },
+  { label: "コンプライアンス", href: "/dashboard/compliance" },
+  { label: "インシデント管理", href: "/dashboard/incidents" },
+  { label: "プロンプトインジェクション検出", href: "/dashboard/vulnerabilities" },
+  { label: "モデルドリフト監視", href: "/dashboard/monitoring" },
+  { label: "EU AI Act", href: "/dashboard/compliance" },
+  { label: "ISO 42001", href: "/dashboard/compliance" },
+  { label: "NIST AI RMF", href: "/dashboard/compliance" },
+  { label: "GPT-4 本番環境", href: "/dashboard/monitoring" },
+  { label: "監査ログ", href: "/dashboard/compliance" },
+]
+
 export function DashboardHeader({ title, description }: { title: string; description?: string }) {
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [searchFocused, setSearchFocused] = useState(false)
 
   const unreadCount = notifications.filter((n) => !n.read).length
+
+  const filteredSearch = searchQuery.length > 0
+    ? SEARCH_RESULTS.filter((r) => r.label.toLowerCase().includes(searchQuery.toLowerCase()))
+    : []
 
   function markAllRead() {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
@@ -52,6 +75,12 @@ export function DashboardHeader({ title, description }: { title: string; descrip
 
   function dismiss(id: string) {
     setNotifications((prev) => prev.filter((n) => n.id !== id))
+  }
+
+  function navigateTo(href: string) {
+    setSearchQuery("")
+    setSearchFocused(false)
+    router.push(href)
   }
 
   return (
@@ -63,12 +92,35 @@ export function DashboardHeader({ title, description }: { title: string; descrip
         )}
       </div>
       <div className="flex items-center gap-4">
+        {/* Search */}
         <div className="relative hidden md:block">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="検索..."
+            placeholder="ページ・機能を検索..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setTimeout(() => setSearchFocused(false), 150)}
             className="w-64 pl-9 bg-secondary border-border text-foreground placeholder:text-muted-foreground"
           />
+          {searchFocused && filteredSearch.length > 0 && (
+            <div className="absolute right-0 left-0 top-full z-50 mt-1 rounded-md border border-border bg-card py-1 shadow-lg">
+              {filteredSearch.map((r) => (
+                <button
+                  key={r.label}
+                  onMouseDown={() => navigateTo(r.href)}
+                  className="block w-full px-3 py-2 text-left text-sm text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+                >
+                  {r.label}
+                </button>
+              ))}
+            </div>
+          )}
+          {searchFocused && searchQuery.length > 0 && filteredSearch.length === 0 && (
+            <div className="absolute right-0 left-0 top-full z-50 mt-1 rounded-md border border-border bg-card py-3 shadow-lg text-center text-sm text-muted-foreground">
+              該当する結果がありません
+            </div>
+          )}
         </div>
 
         {/* Notification bell */}
@@ -85,7 +137,6 @@ export function DashboardHeader({ title, description }: { title: string; descrip
             )}
           </button>
 
-          {/* Notification dropdown */}
           {open && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />

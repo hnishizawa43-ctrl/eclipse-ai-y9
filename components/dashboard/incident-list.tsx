@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { useState } from "react"
+import { toast } from "sonner"
 import {
   AlertTriangle,
   Shield,
@@ -10,6 +11,7 @@ import {
   ChevronDown,
   ChevronUp,
   User,
+  Download,
 } from "lucide-react"
 
 interface Incident {
@@ -25,7 +27,7 @@ interface Incident {
   timeline: { time: string; action: string; actor: string }[]
 }
 
-const incidents: Incident[] = [
+const initialIncidents: Incident[] = [
   {
     id: "INC-2026-047",
     title: "本番LLMに対する重大プロンプトインジェクション攻撃",
@@ -131,11 +133,78 @@ const statusConfig = {
   closed: { label: "クローズ", className: "bg-muted text-muted-foreground border-border" },
 }
 
+const ASSIGNEES = ["セキュリティチーム", "データプライバシーチーム", "MLエンジニアリング", "倫理チーム", "インフラチーム"]
+
+function now() {
+  const d = new Date()
+  return `${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`
+}
+
+function exportIncidentCSV(incidents: Incident[]) {
+  const header = "ID,タイトル,深刻度,ステータス,モデル,担当者,作成日時,更新日時"
+  const rows = incidents.map((i) =>
+    [i.id, `"${i.title}"`, severityLabels[i.severity], statusConfig[i.status].label, i.model, i.assignee, i.createdAt, i.updatedAt].join(",")
+  )
+  const csv = [header, ...rows].join("\n")
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
+  a.download = `eclipse_incidents_${new Date().toISOString().slice(0, 10)}.csv`
+  a.click()
+  URL.revokeObjectURL(url)
+  toast.success("インシデントレポートをエクスポートしました")
+}
+
 export function IncidentList() {
-  const [expandedId, setExpandedId] = useState<string | null>(incidents[0].id)
+  const [expandedId, setExpandedId] = useState<string | null>(initialIncidents[0].id)
+  const [incidents, setIncidents] = useState(initialIncidents)
+  const [assigneePickerId, setAssigneePickerId] = useState<string | null>(null)
+
+  function advanceStatus(id: string) {
+    setIncidents((prev) =>
+      prev.map((inc) => {
+        if (inc.id !== id) return inc
+        const nextStatus = inc.status === "open" ? "investigating" : "resolved"
+        const action = nextStatus === "investigating" ? "調査を開始しました" : "インシデントを解決済みにしました"
+        toast.success(`${inc.id}: ${action}`)
+        return {
+          ...inc,
+          status: nextStatus as Incident["status"],
+          updatedAt: new Date().toISOString().slice(0, 16).replace("T", " "),
+          timeline: [...inc.timeline, { time: now(), action, actor: "あなた" }],
+        }
+      })
+    )
+  }
+
+  function assignTo(incidentId: string, assignee: string) {
+    setIncidents((prev) =>
+      prev.map((inc) => {
+        if (inc.id !== incidentId) return inc
+        toast.success(`${inc.id}: ${assignee}に割り当てました`)
+        return {
+          ...inc,
+          assignee,
+          updatedAt: new Date().toISOString().slice(0, 16).replace("T", " "),
+          timeline: [...inc.timeline, { time: now(), action: `担当者を${assignee}に変更`, actor: "あなた" }],
+        }
+      })
+    )
+    setAssigneePickerId(null)
+  }
 
   return (
     <div className="flex flex-col gap-3">
+      <div className="flex justify-end">
+        <button
+          onClick={() => exportIncidentCSV(incidents)}
+          className="flex items-center gap-1.5 rounded-md border border-border bg-secondary px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <Download className="h-3 w-3" />
+          CSVエクスポート
+        </button>
+      </div>
       {incidents.map((incident) => {
         const isExpanded = expandedId === incident.id
         const SeverityIcon = severityConfig[incident.severity].icon
@@ -220,15 +289,47 @@ export function IncidentList() {
                 <div className="flex items-center gap-2 mt-2 pt-3 border-t border-border">
                   {incident.status !== "closed" && incident.status !== "resolved" && (
                     <>
-                      <button className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors">
+                      <button
+                        onClick={() => advanceStatus(incident.id)}
+                        className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                      >
                         {incident.status === "open" ? "調査開始" : "解決済みにする"}
                       </button>
-                      <button className="rounded-md border border-border bg-secondary px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
-                        担当者割当
-                      </button>
+                      <div className="relative">
+                        <button
+                          onClick={() => setAssigneePickerId(assigneePickerId === incident.id ? null : incident.id)}
+                          className="rounded-md border border-border bg-secondary px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          担当者割当
+                        </button>
+                        {assigneePickerId === incident.id && (
+                          <>
+                            <div className="fixed inset-0 z-40" onClick={() => setAssigneePickerId(null)} />
+                            <div className="absolute bottom-full left-0 z-50 mb-1 w-48 rounded-md border border-border bg-card py-1 shadow-lg">
+                              {ASSIGNEES.map((a) => (
+                                <button
+                                  key={a}
+                                  onClick={() => assignTo(incident.id, a)}
+                                  className={cn(
+                                    "block w-full px-3 py-1.5 text-left text-xs hover:bg-secondary transition-colors",
+                                    a === incident.assignee ? "text-primary font-medium" : "text-muted-foreground"
+                                  )}
+                                >
+                                  {a}
+                                </button>
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </div>
                     </>
                   )}
-                  <button className="rounded-md border border-border bg-secondary px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors ml-auto">
+                  <button
+                    onClick={() => {
+                      exportIncidentCSV([incident])
+                    }}
+                    className="rounded-md border border-border bg-secondary px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors ml-auto"
+                  >
                     詳細レポート
                   </button>
                 </div>

@@ -1,6 +1,9 @@
+"use client"
+
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { FileText, CheckCircle2, AlertCircle, Download } from "lucide-react"
+import { toast } from "sonner"
 
 const auditEntries = [
   {
@@ -59,6 +62,22 @@ const typeConfig = {
   resolve: { icon: CheckCircle2, className: "text-success" },
 }
 
+function exportAuditCSV() {
+  const header = "ID,アクション,規制,ユーザー,日時"
+  const rows = auditEntries.map((e) =>
+    [e.id, `"${e.action}"`, e.regulation, e.user, e.timestamp].join(",")
+  )
+  const csv = [header, ...rows].join("\n")
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
+  a.download = `eclipse_audit_log_${new Date().toISOString().slice(0, 10)}.csv`
+  a.click()
+  URL.revokeObjectURL(url)
+  toast.success("監査ログをCSVでエクスポートしました")
+}
+
 export function AuditLog() {
   return (
     <div className="rounded-lg border border-border bg-card p-5">
@@ -67,7 +86,10 @@ export function AuditLog() {
           <h3 className="text-sm font-semibold text-foreground">監査ログ</h3>
           <p className="text-xs text-muted-foreground">最近のコンプライアンス活動</p>
         </div>
-        <button className="flex items-center gap-1.5 rounded-md border border-border bg-secondary px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
+        <button
+          onClick={exportAuditCSV}
+          className="flex items-center gap-1.5 rounded-md border border-border bg-secondary px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        >
           <Download className="h-3 w-3" />
           エクスポート
         </button>
