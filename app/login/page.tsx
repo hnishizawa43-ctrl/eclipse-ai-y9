@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/lib/auth-context"
 import { Shield } from "lucide-react"
@@ -33,8 +33,13 @@ export default function LoginPage() {
   }
 
   // 認証済みならダッシュボードへ
+  useEffect(() => {
+    if (user && !loading) {
+      router.push("/dashboard")
+    }
+  }, [user, loading, router])
+
   if (user) {
-    router.push("/dashboard")
     return null
   }
 
