@@ -3,6 +3,7 @@
 import { Bell, Search } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { UserMenu } from "@/components/dashboard/user-menu"
 
 export function DashboardHeader({ title, description }: { title: string; description?: string }) {
   return (
@@ -27,9 +28,7 @@ export function DashboardHeader({ title, description }: { title: string; descrip
             3
           </Badge>
         </button>
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-          EC
-        </div>
+        <UserMenu />
       </div>
     </header>
   )
