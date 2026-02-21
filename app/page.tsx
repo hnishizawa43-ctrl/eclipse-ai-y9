@@ -92,7 +92,10 @@ export default function LandingPage() {
 
         <div className="relative z-10 mx-auto max-w-4xl text-center">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-4 py-1.5 text-sm">
-            <span className="inline-flex h-2 w-2 rounded-full bg-success" />
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-50" style={{ animationDuration: "2.5s" }} />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
+            </span>
             <span className="text-muted-foreground">{"全システム稼働中"}</span>
           </div>
 
@@ -211,7 +214,7 @@ export default function LandingPage() {
             ].map((f) => (
               <div
                 key={f.title}
-                className="group relative flex flex-col gap-4 rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:border-primary/30 hover:bg-card/80"
+                className="group relative flex flex-col gap-4 rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:border-primary/30 hover:bg-card/80 hover:shadow-lg hover:shadow-primary/5"
               >
                 <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
                   <f.icon className="h-5 w-5" />
@@ -256,9 +259,15 @@ export default function LandingPage() {
 
             <div className="relative flex items-center justify-center">
               <div className="relative h-72 w-72 sm:h-80 sm:w-80">
-                <div className="absolute inset-0 rounded-full border border-border/40" />
-                <div className="absolute inset-6 rounded-full border border-primary/20" />
-                <div className="absolute inset-12 rounded-full border border-chart-2/20" />
+                <div className="absolute inset-0 animate-spin rounded-full border border-border/40" style={{ animationDuration: "30s" }}>
+                  <div className="absolute -top-1 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-primary/60" />
+                </div>
+                <div className="absolute inset-6 animate-spin rounded-full border border-primary/20" style={{ animationDuration: "24s", animationDirection: "reverse" }}>
+                  <div className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-chart-2/60" />
+                </div>
+                <div className="absolute inset-12 animate-spin rounded-full border border-chart-2/20" style={{ animationDuration: "18s" }}>
+                  <div className="absolute -right-1 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-success/60" />
+                </div>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary/10">
                     <Shield className="h-10 w-10 text-primary" />
