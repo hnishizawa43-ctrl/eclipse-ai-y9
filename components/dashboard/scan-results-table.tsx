@@ -18,9 +18,9 @@ interface Vulnerability {
 const vulnerabilities: Vulnerability[] = [
   {
     id: "VLN-001",
-    title: "Prompt Injection via System Prompt Override",
-    model: "GPT-4 Production",
-    category: "Injection",
+    title: "システムプロンプト上書きによるインジェクション",
+    model: "GPT-4 本番環境",
+    category: "インジェクション",
     severity: "critical",
     status: "open",
     discoveredAt: "2026-02-21 09:15",
@@ -28,9 +28,9 @@ const vulnerabilities: Vulnerability[] = [
   },
   {
     id: "VLN-002",
-    title: "Training Data Extraction via Repeated Queries",
-    model: "Claude-3 Internal",
-    category: "Data Leakage",
+    title: "反復クエリによる学習データ抽出",
+    model: "Claude-3 内部用",
+    category: "データ漏洩",
     severity: "high",
     status: "investigating",
     discoveredAt: "2026-02-21 08:32",
@@ -38,9 +38,9 @@ const vulnerabilities: Vulnerability[] = [
   },
   {
     id: "VLN-003",
-    title: "Model Inversion Attack Surface Detected",
-    model: "Recommendation v3",
-    category: "Model Security",
+    title: "モデル逆推論攻撃サーフェス検出",
+    model: "レコメンド v3",
+    category: "モデルセキュリティ",
     severity: "high",
     status: "mitigated",
     discoveredAt: "2026-02-20 22:10",
@@ -48,9 +48,9 @@ const vulnerabilities: Vulnerability[] = [
   },
   {
     id: "VLN-004",
-    title: "Adversarial Input Bypass in Image Classifier",
+    title: "画像分類器における敵対的入力バイパス",
     model: "Vision Model v2",
-    category: "Adversarial",
+    category: "敵対的攻撃",
     severity: "medium",
     status: "open",
     discoveredAt: "2026-02-20 16:45",
@@ -58,9 +58,9 @@ const vulnerabilities: Vulnerability[] = [
   },
   {
     id: "VLN-005",
-    title: "PII Exposure in Output Tokens",
-    model: "Customer Support Bot",
-    category: "Privacy",
+    title: "出力トークンにおけるPII露出",
+    model: "カスタマーサポートBot",
+    category: "プライバシー",
     severity: "critical",
     status: "investigating",
     discoveredAt: "2026-02-20 14:20",
@@ -68,9 +68,9 @@ const vulnerabilities: Vulnerability[] = [
   },
   {
     id: "VLN-006",
-    title: "Hallucination Rate Exceeds Threshold",
-    model: "Legal Document AI",
-    category: "Reliability",
+    title: "ハルシネーション率が閾値を超過",
+    model: "法務文書AI",
+    category: "信頼性",
     severity: "medium",
     status: "open",
     discoveredAt: "2026-02-20 11:05",
@@ -78,9 +78,9 @@ const vulnerabilities: Vulnerability[] = [
   },
   {
     id: "VLN-007",
-    title: "Bias Detected in Decision Outputs",
-    model: "Hiring Assessment AI",
-    category: "Fairness",
+    title: "意思決定出力におけるバイアス検出",
+    model: "採用評価AI",
+    category: "公平性",
     severity: "high",
     status: "investigating",
     discoveredAt: "2026-02-19 18:30",
@@ -88,15 +88,19 @@ const vulnerabilities: Vulnerability[] = [
   },
   {
     id: "VLN-008",
-    title: "Jailbreak Vulnerability via Encoding",
-    model: "GPT-4 Production",
-    category: "Injection",
+    title: "エンコーディング経由のジェイルブレイク",
+    model: "GPT-4 本番環境",
+    category: "インジェクション",
     severity: "low",
     status: "mitigated",
     discoveredAt: "2026-02-19 09:00",
     cvss: 3.2,
   },
 ]
+
+const severityLabels = { critical: "重大", high: "高", medium: "中", low: "低" }
+const statusLabels = { open: "未対応", investigating: "調査中", mitigated: "対処済み" }
+const filterLabels = { all: "すべて", critical: "重大", high: "高", medium: "中", low: "低" }
 
 const severityConfig = {
   critical: { className: "bg-destructive/15 text-destructive border-destructive/30" },
@@ -120,8 +124,8 @@ export function ScanResultsTable() {
     <div className="rounded-lg border border-border bg-card">
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
         <div>
-          <h3 className="text-sm font-semibold text-foreground">Scan Results</h3>
-          <p className="text-xs text-muted-foreground">{vulnerabilities.length} vulnerabilities found</p>
+          <h3 className="text-sm font-semibold text-foreground">スキャン結果</h3>
+          <p className="text-xs text-muted-foreground">{vulnerabilities.length}件の脆弱性を検出</p>
         </div>
         <div className="flex items-center gap-2">
           {(["all", "critical", "high", "medium", "low"] as const).map((level) => (
@@ -135,7 +139,7 @@ export function ScanResultsTable() {
                   : "bg-secondary text-muted-foreground hover:text-foreground"
               )}
             >
-              {level === "all" ? "All" : level.charAt(0).toUpperCase() + level.slice(1)}
+              {filterLabels[level]}
             </button>
           ))}
         </div>
@@ -145,12 +149,12 @@ export function ScanResultsTable() {
           <thead>
             <tr className="border-b border-border">
               <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">ID</th>
-              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">Vulnerability</th>
-              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">Model</th>
-              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">Category</th>
-              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">Severity</th>
+              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">脆弱性</th>
+              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">モデル</th>
+              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">カテゴリ</th>
+              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">深刻度</th>
               <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">CVSS</th>
-              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">Status</th>
+              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">ステータス</th>
             </tr>
           </thead>
           <tbody>
@@ -166,7 +170,7 @@ export function ScanResultsTable() {
                 </td>
                 <td className="px-5 py-3">
                   <Badge variant="outline" className={cn("text-[10px]", severityConfig[vuln.severity].className)}>
-                    {vuln.severity.toUpperCase()}
+                    {severityLabels[vuln.severity]}
                   </Badge>
                 </td>
                 <td className="px-5 py-3">
@@ -179,7 +183,7 @@ export function ScanResultsTable() {
                 </td>
                 <td className="px-5 py-3">
                   <Badge variant="outline" className={cn("text-[10px]", statusConfig[vuln.status].className)}>
-                    {vuln.status.charAt(0).toUpperCase() + vuln.status.slice(1)}
+                    {statusLabels[vuln.status]}
                   </Badge>
                 </td>
               </tr>

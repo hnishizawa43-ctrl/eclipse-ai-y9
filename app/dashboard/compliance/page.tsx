@@ -8,36 +8,36 @@ export default function CompliancePage() {
   return (
     <div className="flex flex-col">
       <DashboardHeader
-        title="Compliance & Audit"
-        description="Multi-regulation compliance management and automated audit reporting"
+        title="コンプライアンス & 監査"
+        description="マルチ規制コンプライアンス管理と自動監査レポート"
       />
       <div className="flex flex-col gap-6 p-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <KpiCard
-            title="Overall Compliance"
+            title="全体コンプライアンス"
             value="84%"
-            change="+5pts this month"
+            change="今月 +5pts"
             changeType="positive"
             icon={FileCheck}
           />
           <KpiCard
-            title="Regulations Tracked"
+            title="追跡中の規制"
             value="6"
             icon={ShieldCheck}
-            description="Across 3 jurisdictions"
+            description="3つの法域にわたる"
           />
           <KpiCard
-            title="Pending Actions"
+            title="保留中のアクション"
             value="12"
             change="-3"
             changeType="positive"
             icon={Clock}
-            description="Action items remaining"
+            description="残りのアクション項目"
           />
           <KpiCard
-            title="Reports Generated"
+            title="生成レポート"
             value="47"
-            change="+8 this month"
+            change="今月 +8"
             changeType="positive"
             icon={FileText}
           />

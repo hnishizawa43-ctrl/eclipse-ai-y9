@@ -7,7 +7,6 @@ import {
   AlertTriangle,
   Shield,
   Clock,
-  CheckCircle2,
   ChevronDown,
   ChevronUp,
   User,
@@ -29,89 +28,89 @@ interface Incident {
 const incidents: Incident[] = [
   {
     id: "INC-2026-047",
-    title: "Critical Prompt Injection Attack on Production LLM",
-    description: "A sophisticated prompt injection attack was detected targeting the GPT-4 production endpoint. The attack attempted to extract system prompts and internal instructions.",
+    title: "本番LLMに対する重大プロンプトインジェクション攻撃",
+    description: "GPT-4本番エンドポイントを標的とした高度なプロンプトインジェクション攻撃が検出されました。攻撃はシステムプロンプトと内部指示の抽出を試みました。",
     severity: "critical",
     status: "investigating",
-    model: "GPT-4 Production",
-    assignee: "Security Team",
+    model: "GPT-4 本番環境",
+    assignee: "セキュリティチーム",
     createdAt: "2026-02-21 09:12",
     updatedAt: "2026-02-21 10:45",
     timeline: [
-      { time: "09:12", action: "Incident detected by automated monitoring", actor: "System" },
-      { time: "09:14", action: "Alert sent to security team", actor: "System" },
-      { time: "09:20", action: "Investigation started", actor: "Security Team" },
-      { time: "09:45", action: "Attack vector identified: encoded unicode bypass", actor: "Security Team" },
-      { time: "10:15", action: "Temporary input filter deployed", actor: "Security Team" },
-      { time: "10:45", action: "Root cause analysis in progress", actor: "Security Team" },
+      { time: "09:12", action: "自動モニタリングによりインシデント検知", actor: "システム" },
+      { time: "09:14", action: "セキュリティチームにアラート送信", actor: "システム" },
+      { time: "09:20", action: "調査開始", actor: "セキュリティチーム" },
+      { time: "09:45", action: "攻撃ベクター特定: Unicodeエンコーディングバイパス", actor: "セキュリティチーム" },
+      { time: "10:15", action: "一時的な入力フィルターを展開", actor: "セキュリティチーム" },
+      { time: "10:45", action: "根本原因分析を進行中", actor: "セキュリティチーム" },
     ],
   },
   {
     id: "INC-2026-046",
-    title: "PII Data Leakage in Customer Support Bot",
-    description: "Customer PII was detected in model outputs during routine monitoring. The support bot inadvertently exposed email addresses from training data.",
+    title: "カスタマーサポートBotでPIIデータ漏洩",
+    description: "定期モニタリング中にモデル出力から顧客PIIが検出されました。サポートBotが学習データからメールアドレスを不注意に露出しました。",
     severity: "high",
     status: "resolved",
-    model: "Customer Support Bot",
-    assignee: "Data Privacy Team",
+    model: "カスタマーサポートBot",
+    assignee: "データプライバシーチーム",
     createdAt: "2026-02-20 14:30",
     updatedAt: "2026-02-21 08:00",
     timeline: [
-      { time: "14:30", action: "PII detected in output monitoring", actor: "System" },
-      { time: "14:35", action: "Model output temporarily restricted", actor: "System" },
-      { time: "15:00", action: "Data privacy team notified", actor: "System" },
-      { time: "16:30", action: "Output filter updated to catch PII patterns", actor: "Data Privacy Team" },
-      { time: "08:00", action: "Fix verified and model restored", actor: "Data Privacy Team" },
+      { time: "14:30", action: "出力モニタリングでPIIを検出", actor: "システム" },
+      { time: "14:35", action: "モデル出力を一時制限", actor: "システム" },
+      { time: "15:00", action: "データプライバシーチームに通知", actor: "システム" },
+      { time: "16:30", action: "PIIパターン検出用の出力フィルター更新", actor: "データプライバシーチーム" },
+      { time: "08:00", action: "修正を検証しモデル復旧", actor: "データプライバシーチーム" },
     ],
   },
   {
     id: "INC-2026-045",
-    title: "Model Drift Detected in Recommendation Engine",
-    description: "Significant output distribution shift detected in the recommendation model. Performance metrics degraded beyond acceptable thresholds.",
+    title: "レコメンドエンジンでモデルドリフト検出",
+    description: "レコメンドモデルで顕著な出力分布のシフトが検出されました。パフォーマンス指標が許容閾値を超えて劣化しています。",
     severity: "medium",
     status: "open",
-    model: "Recommendation v3",
-    assignee: "ML Engineering",
+    model: "レコメンド v3",
+    assignee: "MLエンジニアリング",
     createdAt: "2026-02-20 11:00",
     updatedAt: "2026-02-20 11:00",
     timeline: [
-      { time: "11:00", action: "Drift score exceeded threshold (0.18 > 0.10)", actor: "System" },
-      { time: "11:05", action: "Alert sent to ML engineering", actor: "System" },
+      { time: "11:00", action: "ドリフトスコアが閾値超過 (0.18 > 0.10)", actor: "システム" },
+      { time: "11:05", action: "MLエンジニアリングにアラート送信", actor: "システム" },
     ],
   },
   {
     id: "INC-2026-044",
-    title: "Unauthorized API Access Attempt",
-    description: "Multiple unauthorized access attempts detected on the internal LLM gateway from an unrecognized IP range.",
+    title: "不正APIアクセス試行",
+    description: "不明なIPレンジから内部LLMゲートウェイへの複数の不正アクセス試行が検出されました。",
     severity: "high",
     status: "closed",
-    model: "Internal LLM Gateway",
-    assignee: "Security Team",
+    model: "内部LLMゲートウェイ",
+    assignee: "セキュリティチーム",
     createdAt: "2026-02-19 22:15",
     updatedAt: "2026-02-20 09:30",
     timeline: [
-      { time: "22:15", action: "Unusual access pattern detected", actor: "System" },
-      { time: "22:16", action: "IP range blocked automatically", actor: "System" },
-      { time: "22:30", action: "Security team alerted", actor: "System" },
-      { time: "09:00", action: "Investigation completed - brute force attempt confirmed", actor: "Security Team" },
-      { time: "09:30", action: "IP blacklist updated, incident closed", actor: "Security Team" },
+      { time: "22:15", action: "異常アクセスパターンを検知", actor: "システム" },
+      { time: "22:16", action: "IPレンジを自動ブロック", actor: "システム" },
+      { time: "22:30", action: "セキュリティチームにアラート", actor: "システム" },
+      { time: "09:00", action: "調査完了 - ブルートフォース試行と確認", actor: "セキュリティチーム" },
+      { time: "09:30", action: "IPブラックリスト更新、インシデントクローズ", actor: "セキュリティチーム" },
     ],
   },
   {
     id: "INC-2026-043",
-    title: "Bias Score Threshold Exceeded in Hiring AI",
-    description: "The hiring assessment AI showed statistically significant bias in gender-related decision patterns during the weekly fairness audit.",
+    title: "採用AIでバイアススコア閾値超過",
+    description: "週次公平性監査で、採用評価AIが性別に関連する意思決定パターンで統計的に有意なバイアスを示しました。",
     severity: "high",
     status: "investigating",
-    model: "Hiring Assessment AI",
-    assignee: "Ethics Team",
+    model: "採用評価AI",
+    assignee: "倫理チーム",
     createdAt: "2026-02-19 16:00",
     updatedAt: "2026-02-20 14:00",
     timeline: [
-      { time: "16:00", action: "Weekly fairness audit flagged bias patterns", actor: "System" },
-      { time: "16:10", action: "Model suspended from production", actor: "System" },
-      { time: "17:00", action: "Ethics team review initiated", actor: "Ethics Team" },
-      { time: "14:00", action: "Retraining with debiased dataset in progress", actor: "Ethics Team" },
+      { time: "16:00", action: "週次公平性監査でバイアスパターン検出", actor: "システム" },
+      { time: "16:10", action: "モデルを本番から一時停止", actor: "システム" },
+      { time: "17:00", action: "倫理チームによるレビュー開始", actor: "倫理チーム" },
+      { time: "14:00", action: "バイアス除去データセットでの再学習進行中", actor: "倫理チーム" },
     ],
   },
 ]
@@ -123,11 +122,13 @@ const severityConfig = {
   low: { className: "bg-primary/15 text-primary border-primary/30", icon: Shield },
 }
 
+const severityLabels = { critical: "重大", high: "高", medium: "中", low: "低" }
+
 const statusConfig = {
-  open: { label: "Open", className: "bg-destructive/15 text-destructive border-destructive/30" },
-  investigating: { label: "Investigating", className: "bg-warning/15 text-warning border-warning/30" },
-  resolved: { label: "Resolved", className: "bg-success/15 text-success border-success/30" },
-  closed: { label: "Closed", className: "bg-muted text-muted-foreground border-border" },
+  open: { label: "未対応", className: "bg-destructive/15 text-destructive border-destructive/30" },
+  investigating: { label: "調査中", className: "bg-warning/15 text-warning border-warning/30" },
+  resolved: { label: "解決済み", className: "bg-success/15 text-success border-success/30" },
+  closed: { label: "クローズ", className: "bg-muted text-muted-foreground border-border" },
 }
 
 export function IncidentList() {
@@ -141,7 +142,6 @@ export function IncidentList() {
 
         return (
           <div key={incident.id} className="rounded-lg border border-border bg-card overflow-hidden">
-            {/* Header */}
             <button
               onClick={() => setExpandedId(isExpanded ? null : incident.id)}
               className="flex w-full items-center gap-4 px-5 py-4 text-left hover:bg-secondary/30 transition-colors"
@@ -165,7 +165,7 @@ export function IncidentList() {
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <Badge variant="outline" className={cn("text-[10px]", severityConfig[incident.severity].className)}>
-                  {incident.severity.toUpperCase()}
+                  {severityLabels[incident.severity]}
                 </Badge>
                 <Badge variant="outline" className={cn("text-[10px]", statusConfig[incident.status].className)}>
                   {statusConfig[incident.status].label}
@@ -178,7 +178,6 @@ export function IncidentList() {
               </div>
             </button>
 
-            {/* Expanded Content */}
             {isExpanded && (
               <div className="border-t border-border px-5 py-4">
                 <p className="text-sm text-muted-foreground mb-4">{incident.description}</p>
@@ -190,13 +189,12 @@ export function IncidentList() {
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Clock className="h-3.5 w-3.5 text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground">Updated: {incident.updatedAt}</span>
+                    <span className="text-xs text-muted-foreground">更新: {incident.updatedAt}</span>
                   </div>
                 </div>
 
-                {/* Timeline */}
                 <div className="flex flex-col gap-0 pl-2">
-                  <h4 className="text-xs font-semibold text-foreground mb-3">Timeline</h4>
+                  <h4 className="text-xs font-semibold text-foreground mb-3">タイムライン</h4>
                   {incident.timeline.map((event, idx) => (
                     <div key={idx} className="flex gap-3 relative">
                       <div className="flex flex-col items-center">
@@ -223,15 +221,15 @@ export function IncidentList() {
                   {incident.status !== "closed" && incident.status !== "resolved" && (
                     <>
                       <button className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors">
-                        {incident.status === "open" ? "Start Investigation" : "Mark Resolved"}
+                        {incident.status === "open" ? "調査開始" : "解決済みにする"}
                       </button>
                       <button className="rounded-md border border-border bg-secondary px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
-                        Assign
+                        担当者割当
                       </button>
                     </>
                   )}
                   <button className="rounded-md border border-border bg-secondary px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors ml-auto">
-                    View Full Report
+                    詳細レポート
                   </button>
                 </div>
               </div>

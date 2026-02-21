@@ -10,47 +10,45 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col">
       <DashboardHeader
-        title="Overview"
-        description="AI Security & Governance Dashboard"
+        title="概要"
+        description="AIセキュリティ & ガバナンス ダッシュボード"
       />
       <div className="flex flex-col gap-6 p-6">
-        {/* KPI Cards */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <KpiCard
-            title="Models Protected"
+            title="保護中モデル"
             value="24"
-            change="+3 this week"
+            change="今週 +3"
             changeType="positive"
             icon={Shield}
-            description="Active AI models under monitoring"
+            description="監視対象のAIモデル"
           />
           <KpiCard
-            title="Threats Blocked"
+            title="脅威ブロック"
             value="1,247"
             change="+12.5%"
             changeType="positive"
             icon={AlertTriangle}
-            description="Last 30 days"
+            description="過去30日間"
           />
           <KpiCard
-            title="Uptime"
+            title="稼働率"
             value="99.97%"
             change="+0.02%"
             changeType="positive"
             icon={Activity}
-            description="System availability (30d)"
+            description="システム可用性 (30日)"
           />
           <KpiCard
-            title="Compliance Score"
+            title="コンプライアンススコア"
             value="84%"
             change="+5pts"
             changeType="positive"
             icon={FileCheck}
-            description="Across all regulations"
+            description="全規制対応"
           />
         </div>
 
-        {/* Charts Row */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2">
             <ThreatChart />
@@ -58,7 +56,6 @@ export default function DashboardPage() {
           <ComplianceOverview />
         </div>
 
-        {/* Tables Row */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <ModelStatus />
           <RecentAlerts />

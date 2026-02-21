@@ -1,32 +1,32 @@
 import { cn } from "@/lib/utils"
 
 const models = [
-  { name: "GPT-4 Production", status: "protected" as const, threats: 3, lastScan: "5 min ago" },
-  { name: "Claude-3 Internal", status: "protected" as const, threats: 0, lastScan: "12 min ago" },
-  { name: "Recommendation v3", status: "warning" as const, threats: 7, lastScan: "1 hour ago" },
-  { name: "Customer Support Bot", status: "protected" as const, threats: 1, lastScan: "20 min ago" },
-  { name: "Hiring Assessment AI", status: "critical" as const, threats: 12, lastScan: "3 hours ago" },
+  { name: "GPT-4 本番環境", status: "protected" as const, threats: 3, lastScan: "5分前" },
+  { name: "Claude-3 内部用", status: "protected" as const, threats: 0, lastScan: "12分前" },
+  { name: "レコメンド v3", status: "warning" as const, threats: 7, lastScan: "1時間前" },
+  { name: "カスタマーサポートBot", status: "protected" as const, threats: 1, lastScan: "20分前" },
+  { name: "採用評価AI", status: "critical" as const, threats: 12, lastScan: "3時間前" },
 ]
 
 const statusConfig = {
-  protected: { label: "Protected", dotClass: "bg-success" },
-  warning: { label: "Warning", dotClass: "bg-warning" },
-  critical: { label: "At Risk", dotClass: "bg-destructive" },
+  protected: { label: "保護中", dotClass: "bg-success" },
+  warning: { label: "警告", dotClass: "bg-warning" },
+  critical: { label: "危険", dotClass: "bg-destructive" },
 }
 
 export function ModelStatus() {
   return (
     <div className="rounded-lg border border-border bg-card p-5">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-foreground">AI Models</h3>
-        <span className="text-xs text-muted-foreground">{models.length} models registered</span>
+        <h3 className="text-sm font-semibold text-foreground">AIモデル一覧</h3>
+        <span className="text-xs text-muted-foreground">{models.length}モデル登録済み</span>
       </div>
       <div className="flex flex-col">
         <div className="grid grid-cols-4 gap-4 border-b border-border pb-2 mb-2">
-          <span className="text-xs font-medium text-muted-foreground">Model</span>
-          <span className="text-xs font-medium text-muted-foreground">Status</span>
-          <span className="text-xs font-medium text-muted-foreground text-right">Threats</span>
-          <span className="text-xs font-medium text-muted-foreground text-right">Last Scan</span>
+          <span className="text-xs font-medium text-muted-foreground">モデル</span>
+          <span className="text-xs font-medium text-muted-foreground">ステータス</span>
+          <span className="text-xs font-medium text-muted-foreground text-right">脅威数</span>
+          <span className="text-xs font-medium text-muted-foreground text-right">最終スキャン</span>
         </div>
         {models.map((model) => (
           <div

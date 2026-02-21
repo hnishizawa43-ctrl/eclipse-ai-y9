@@ -19,7 +19,7 @@ interface Regulation {
 const regulations: Regulation[] = [
   {
     name: "EU AI Act",
-    fullName: "European Union Artificial Intelligence Act",
+    fullName: "欧州連合 人工知能規制法",
     score: 87,
     status: "compliant",
     requirements: 42,
@@ -27,8 +27,8 @@ const regulations: Regulation[] = [
     lastAudit: "2026-02-18",
   },
   {
-    name: "US Executive Order",
-    fullName: "Executive Order on Safe, Secure AI",
+    name: "米国大統領令",
+    fullName: "安全で安心なAIに関する大統領令",
     score: 72,
     status: "in-progress",
     requirements: 28,
@@ -37,8 +37,8 @@ const regulations: Regulation[] = [
     deadline: "2026-04-01",
   },
   {
-    name: "Japan AI Guidelines",
-    fullName: "AI Utilization Guidelines (Japan)",
+    name: "AI事業者ガイドライン",
+    fullName: "AI事業者ガイドライン（日本）",
     score: 94,
     status: "compliant",
     requirements: 35,
@@ -47,7 +47,7 @@ const regulations: Regulation[] = [
   },
   {
     name: "ISO 42001",
-    fullName: "AI Management System Standard",
+    fullName: "AIマネジメントシステム規格",
     score: 63,
     status: "in-progress",
     requirements: 56,
@@ -57,7 +57,7 @@ const regulations: Regulation[] = [
   },
   {
     name: "NIST AI RMF",
-    fullName: "AI Risk Management Framework",
+    fullName: "AIリスクマネジメントフレームワーク",
     score: 78,
     status: "in-progress",
     requirements: 32,
@@ -66,7 +66,7 @@ const regulations: Regulation[] = [
   },
   {
     name: "SOC 2 Type II",
-    fullName: "Service Organization Control 2",
+    fullName: "サービス組織統制 2",
     score: 91,
     status: "compliant",
     requirements: 48,
@@ -76,9 +76,9 @@ const regulations: Regulation[] = [
 ]
 
 const statusConfig = {
-  "compliant": { icon: CheckCircle2, label: "Compliant", className: "bg-success/15 text-success border-success/30" },
-  "in-progress": { icon: Clock, label: "In Progress", className: "bg-warning/15 text-warning border-warning/30" },
-  "non-compliant": { icon: AlertCircle, label: "Non-Compliant", className: "bg-destructive/15 text-destructive border-destructive/30" },
+  "compliant": { icon: CheckCircle2, label: "準拠", className: "bg-success/15 text-success border-success/30" },
+  "in-progress": { icon: Clock, label: "対応中", className: "bg-warning/15 text-warning border-warning/30" },
+  "non-compliant": { icon: AlertCircle, label: "非準拠", className: "bg-destructive/15 text-destructive border-destructive/30" },
 }
 
 export function RegulationCards() {
@@ -104,7 +104,7 @@ export function RegulationCards() {
 
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">Compliance Score</span>
+                <span className="text-xs text-muted-foreground">コンプライアンススコア</span>
                 <span className={cn(
                   "text-lg font-bold font-mono",
                   reg.score >= 90 ? "text-success" : reg.score >= 70 ? "text-warning" : "text-destructive"
@@ -117,13 +117,13 @@ export function RegulationCards() {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] text-muted-foreground">Requirements</span>
+                <span className="text-[10px] text-muted-foreground">要件</span>
                 <span className="text-xs font-medium text-foreground">
-                  {reg.completed}/{reg.requirements} completed
+                  {reg.completed}/{reg.requirements} 完了
                 </span>
               </div>
               <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] text-muted-foreground">Last Audit</span>
+                <span className="text-[10px] text-muted-foreground">最終監査</span>
                 <span className="text-xs font-medium text-foreground">{reg.lastAudit}</span>
               </div>
             </div>
@@ -131,7 +131,7 @@ export function RegulationCards() {
             {reg.deadline && (
               <div className="flex items-center gap-1.5 rounded-md bg-warning/10 px-3 py-1.5">
                 <Clock className="h-3 w-3 text-warning" />
-                <span className="text-[10px] text-warning">Deadline: {reg.deadline}</span>
+                <span className="text-[10px] text-warning">期限: {reg.deadline}</span>
               </div>
             )}
           </div>

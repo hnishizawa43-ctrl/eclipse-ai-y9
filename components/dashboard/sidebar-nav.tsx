@@ -17,27 +17,27 @@ import { useState } from "react"
 
 const navItems = [
   {
-    label: "Overview",
+    label: "概要",
     href: "/dashboard",
     icon: LayoutDashboard,
   },
   {
-    label: "Vulnerability Scan",
+    label: "脆弱性スキャン",
     href: "/dashboard/vulnerabilities",
     icon: Shield,
   },
   {
-    label: "Monitoring",
+    label: "モニタリング",
     href: "/dashboard/monitoring",
     icon: Activity,
   },
   {
-    label: "Compliance",
+    label: "コンプライアンス",
     href: "/dashboard/compliance",
     icon: FileCheck,
   },
   {
-    label: "Incidents",
+    label: "インシデント",
     href: "/dashboard/incidents",
     icon: AlertTriangle,
   },
@@ -111,7 +111,7 @@ export function SidebarNav() {
           className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
         >
           <Settings className="h-4 w-4 shrink-0" />
-          {!collapsed && <span>Settings</span>}
+          {!collapsed && <span>{"設定"}</span>}
         </Link>
         {collapsed && (
           <button

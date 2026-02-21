@@ -1,62 +1,76 @@
+"use client"
+
+import { useEffect, useState, useCallback } from "react"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 
-const alerts = [
-  {
-    id: 1,
-    title: "Prompt Injection Detected",
-    model: "GPT-4 Production",
-    severity: "critical" as const,
-    time: "2 min ago",
-  },
-  {
-    id: 2,
-    title: "Model Drift Anomaly",
-    model: "Recommendation Engine v3",
-    severity: "warning" as const,
-    time: "15 min ago",
-  },
-  {
-    id: 3,
-    title: "PII Leakage Attempt",
-    model: "Customer Support Bot",
-    severity: "critical" as const,
-    time: "32 min ago",
-  },
-  {
-    id: 4,
-    title: "Bias Score Threshold Exceeded",
-    model: "Hiring Assessment AI",
-    severity: "warning" as const,
-    time: "1 hour ago",
-  },
-  {
-    id: 5,
-    title: "Unauthorized API Access",
-    model: "Internal LLM Gateway",
-    severity: "info" as const,
-    time: "2 hours ago",
-  },
+interface Alert {
+  id: number
+  title: string
+  model: string
+  severity: "critical" | "warning" | "info"
+  time: string
+}
+
+const initialAlerts: Alert[] = [
+  { id: 1, title: "プロンプトインジェクション検知", model: "GPT-4 本番環境", severity: "critical", time: "2分前" },
+  { id: 2, title: "モデルドリフト異常", model: "レコメンドエンジン v3", severity: "warning", time: "15分前" },
+  { id: 3, title: "PII漏洩試行", model: "カスタマーサポートBot", severity: "critical", time: "32分前" },
+  { id: 4, title: "バイアススコア閾値超過", model: "採用評価AI", severity: "warning", time: "1時間前" },
+  { id: 5, title: "不正APIアクセス", model: "内部LLMゲートウェイ", severity: "info", time: "2時間前" },
+]
+
+const newAlertPool: Omit<Alert, "id" | "time">[] = [
+  { title: "トークン異常消費検知", model: "GPT-4 本番環境", severity: "warning" },
+  { title: "出力フィルター回避試行", model: "カスタマーサポートBot", severity: "critical" },
+  { title: "モデル推論レイテンシ急上昇", model: "Vision Model v2", severity: "warning" },
+  { title: "学習データ抽出攻撃", model: "Claude-3 内部用", severity: "critical" },
+  { title: "ハルシネーション率上昇", model: "法務文書AI", severity: "info" },
+  { title: "敵対的入力パターン検知", model: "レコメンドエンジン v3", severity: "critical" },
 ]
 
 const severityConfig = {
-  critical: { label: "Critical", className: "bg-destructive/15 text-destructive border-destructive/30" },
-  warning: { label: "Warning", className: "bg-warning/15 text-warning border-warning/30" },
-  info: { label: "Info", className: "bg-primary/15 text-primary border-primary/30" },
+  critical: { label: "重大", className: "bg-destructive/15 text-destructive border-destructive/30" },
+  warning: { label: "警告", className: "bg-warning/15 text-warning border-warning/30" },
+  info: { label: "情報", className: "bg-primary/15 text-primary border-primary/30" },
 }
 
 export function RecentAlerts() {
+  const [alerts, setAlerts] = useState<Alert[]>(initialAlerts)
+  const [nextId, setNextId] = useState(6)
+
+  const addAlert = useCallback(() => {
+    const pool = newAlertPool[Math.floor(Math.random() * newAlertPool.length)]
+    setAlerts((prev) => {
+      const newAlert: Alert = {
+        ...pool,
+        id: nextId,
+        time: "たった今",
+      }
+      setNextId((id) => id + 1)
+      return [newAlert, ...prev.slice(0, 4)]
+    })
+  }, [nextId])
+
+  useEffect(() => {
+    const interval = setInterval(addAlert, 8000)
+    return () => clearInterval(interval)
+  }, [addAlert])
+
   return (
     <div className="rounded-lg border border-border bg-card p-5">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-foreground">Recent Alerts</h3>
-        <span className="text-xs text-primary cursor-pointer hover:underline">View All</span>
+        <div className="flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-foreground">最新アラート</h3>
+          <div className="flex h-2 w-2 rounded-full bg-success animate-pulse" />
+        </div>
+        <span className="text-xs text-primary cursor-pointer hover:underline">すべて表示</span>
       </div>
       <div className="flex flex-col gap-3">
         {alerts.map((alert) => (
           <div
             key={alert.id}
-            className="flex items-center justify-between rounded-md border border-border bg-secondary/50 px-3 py-2.5"
+            className="flex items-center justify-between rounded-md border border-border bg-secondary/50 px-3 py-2.5 animate-in fade-in slide-in-from-top-1 duration-300"
           >
             <div className="flex flex-col gap-0.5">
               <span className="text-sm font-medium text-foreground">{alert.title}</span>

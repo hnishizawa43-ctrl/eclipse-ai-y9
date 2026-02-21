@@ -7,10 +7,10 @@ import { Shield, Play, CheckCircle2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const scanTypes = [
-  { id: "injection", label: "Prompt Injection", description: "Test for prompt injection vulnerabilities" },
-  { id: "leakage", label: "Data Leakage", description: "Check for PII and training data exposure" },
-  { id: "adversarial", label: "Adversarial Attack", description: "Run adversarial robustness tests" },
-  { id: "bias", label: "Bias Detection", description: "Analyze output fairness and bias" },
+  { id: "injection", label: "プロンプトインジェクション", description: "プロンプトインジェクション脆弱性のテスト" },
+  { id: "leakage", label: "データ漏洩", description: "PII及び学習データ露出のチェック" },
+  { id: "adversarial", label: "敵対的攻撃", description: "敵対的ロバストネステストの実行" },
+  { id: "bias", label: "バイアス検出", description: "出力の公平性とバイアスの分析" },
 ]
 
 export function ScanRunner() {
@@ -43,7 +43,7 @@ export function ScanRunner() {
     <div className="rounded-lg border border-border bg-card p-5">
       <div className="mb-4 flex items-center gap-2">
         <Shield className="h-4 w-4 text-primary" />
-        <h3 className="text-sm font-semibold text-foreground">Run Security Scan</h3>
+        <h3 className="text-sm font-semibold text-foreground">セキュリティスキャン実行</h3>
       </div>
 
       <div className="grid grid-cols-2 gap-3 mb-4">
@@ -75,7 +75,7 @@ export function ScanRunner() {
       {scanning && (
         <div className="mb-4 flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">Scanning in progress...</span>
+            <span className="text-xs text-muted-foreground">スキャン実行中...</span>
             <span className="text-xs font-mono text-primary">{Math.min(100, Math.round(progress))}%</span>
           </div>
           <Progress value={Math.min(100, progress)} className="h-1.5 bg-secondary" />
@@ -88,7 +88,7 @@ export function ScanRunner() {
         className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
       >
         <Play className="mr-2 h-3.5 w-3.5" />
-        {scanning ? "Scanning..." : "Start Scan"}
+        {scanning ? "スキャン中..." : "スキャン開始"}
       </Button>
     </div>
   )

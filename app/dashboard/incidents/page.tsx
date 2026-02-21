@@ -7,38 +7,38 @@ export default function IncidentsPage() {
   return (
     <div className="flex flex-col">
       <DashboardHeader
-        title="Incident Management"
-        description="Track, investigate, and resolve AI security incidents"
+        title="インシデント管理"
+        description="AIセキュリティインシデントの追跡・調査・解決"
       />
       <div className="flex flex-col gap-6 p-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <KpiCard
-            title="Open Incidents"
+            title="未対応インシデント"
             value="3"
-            change="+1 today"
+            change="本日 +1"
             changeType="negative"
             icon={AlertTriangle}
           />
           <KpiCard
-            title="Investigating"
+            title="調査中"
             value="2"
             icon={Clock}
-            description="Active investigations"
+            description="進行中の調査"
           />
           <KpiCard
-            title="Resolved (30d)"
+            title="解決済み (30日)"
             value="18"
             change="+5"
             changeType="positive"
             icon={CheckCircle2}
           />
           <KpiCard
-            title="Avg Resolution"
-            value="4.2h"
+            title="平均解決時間"
+            value="4.2時間"
             change="-1.3h"
             changeType="positive"
             icon={TrendingDown}
-            description="Mean time to resolution"
+            description="平均対応完了時間"
           />
         </div>
 
