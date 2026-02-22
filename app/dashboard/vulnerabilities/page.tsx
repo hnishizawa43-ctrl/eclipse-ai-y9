@@ -11,6 +11,7 @@ import { getVulnerabilities, addVulnerabilities, addAuditEntry } from "@/lib/fir
 import type { Vulnerability } from "@/lib/firestore"
 import { Shield, AlertTriangle, Bug, Clock } from "lucide-react"
 import { toast } from "sonner"
+import { AiAnalysis } from "@/components/dashboard/ai-analysis"
 
 export default function VulnerabilitiesPage() {
   const { user } = useAuth()
@@ -98,6 +99,13 @@ export default function VulnerabilitiesPage() {
             description={scanCount > 0 ? "今セッション中" : "次回予定: 4時間後"}
           />
         </div>
+
+        {!loading && vulnerabilities.length > 0 && (
+          <AiAnalysis
+            label="脆弱性をAIで分析"
+            context={`以下はAIモデルの脆弱性スキャン結果です。重大度別に分析し、優先対応すべき項目と具体的な修正方法を提案してください。\n\n${vulnerabilities.slice(0, 10).map(v => `- [${v.severity.toUpperCase()}] ${v.title} (モデル: ${v.model}, CVSS: ${v.cvss}, カテゴリ: ${v.category})`).join("\n")}`}
+          />
+        )}
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2">

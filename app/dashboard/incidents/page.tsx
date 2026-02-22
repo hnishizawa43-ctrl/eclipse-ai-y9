@@ -9,6 +9,7 @@ import { getIncidents, updateIncident as updateIncidentFirestore, addAuditEntry 
 import type { Incident } from "@/lib/firestore"
 import { AlertTriangle, Clock, CheckCircle2, TrendingDown } from "lucide-react"
 import { toast } from "sonner"
+import { AiAnalysis } from "@/components/dashboard/ai-analysis"
 
 export default function IncidentsPage() {
   const { user } = useAuth()
@@ -93,6 +94,13 @@ export default function IncidentsPage() {
             description="平均対応完了時間"
           />
         </div>
+
+        {!loading && incidents.length > 0 && (
+          <AiAnalysis
+            label="インシデントをAIで分析"
+            context={`以下はAIセキュリティインシデントの一覧です。パターン分析、根本原因の推定、対応優先順位の提案を行ってください。\n\n${incidents.slice(0, 8).map(i => `- [${i.severity.toUpperCase()}/${i.status}] ${i.title} (モデル: ${i.model}, 担当: ${i.assignee}, 作成: ${i.createdAt})`).join("\n")}`}
+          />
+        )}
 
         {loading ? (
           <div className="flex items-center justify-center h-64 rounded-lg border border-border bg-card">

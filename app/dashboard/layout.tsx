@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/lib/auth-context"
 import { seedIfNeeded } from "@/lib/firestore"
 import { SidebarNav } from "@/components/dashboard/sidebar-nav"
+import { AiAssistant } from "@/components/dashboard/ai-assistant"
 import { Shield } from "lucide-react"
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -47,6 +48,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <main className="flex-1 overflow-auto bg-background">
         {children}
       </main>
+      <AiAssistant />
     </div>
   )
 }
