@@ -54,6 +54,11 @@ const SEARCH_RESULTS = [
   { label: "NIST AI RMF", href: "/dashboard/compliance" },
   { label: "GPT-4 本番環境", href: "/dashboard/monitoring" },
   { label: "監査ログ", href: "/dashboard/compliance" },
+  { label: "設定", href: "/dashboard/settings" },
+  { label: "プロフィール設定", href: "/dashboard/settings" },
+  { label: "APIキー管理", href: "/dashboard/settings" },
+  { label: "通知設定", href: "/dashboard/settings" },
+  { label: "セキュリティ設定", href: "/dashboard/settings" },
 ]
 
 export function DashboardHeader({ title, description }: { title: string; description?: string }) {

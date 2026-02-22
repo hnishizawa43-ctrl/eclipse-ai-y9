@@ -107,10 +107,15 @@ export function SidebarNav() {
 
       <div className="border-t border-sidebar-border p-2">
         <Link
-          href="/dashboard"
-          className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
+          href="/dashboard/settings"
+          className={cn(
+            "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+            pathname === "/dashboard/settings"
+              ? "bg-sidebar-accent text-sidebar-primary"
+              : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+          )}
         >
-          <Settings className="h-4 w-4 shrink-0" />
+          <Settings className={cn("h-4 w-4 shrink-0", pathname === "/dashboard/settings" && "text-sidebar-primary")} />
           {!collapsed && <span>{"設定"}</span>}
         </Link>
         {collapsed && (

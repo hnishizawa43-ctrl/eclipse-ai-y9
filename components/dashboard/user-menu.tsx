@@ -53,7 +53,10 @@ export function UserMenu() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-border" />
-        <DropdownMenuItem className="text-foreground focus:bg-secondary focus:text-foreground cursor-pointer">
+        <DropdownMenuItem
+          onClick={() => router.push("/dashboard/settings")}
+          className="text-foreground focus:bg-secondary focus:text-foreground cursor-pointer"
+        >
           <User className="mr-2 h-4 w-4" />
           プロフィール
         </DropdownMenuItem>
