@@ -9,6 +9,8 @@ import { ComplianceOverview } from "@/components/dashboard/compliance-overview"
 import { ModelStatus } from "@/components/dashboard/model-status"
 import { Shield, AlertTriangle, Activity, FileCheck } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/lib/auth-context"
+import { getVulnerabilities, getIncidents } from "@/lib/firestore"
 
 function FadeIn({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
   const [visible, setVisible] = useState(false)
@@ -24,6 +26,19 @@ function FadeIn({ children, delay = 0, className }: { children: React.ReactNode;
 }
 
 export default function DashboardPage() {
+  const { user } = useAuth()
+  const [vulnCount, setVulnCount] = useState<number | null>(null)
+  const [threatBlocked, setThreatBlocked] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (!user) return
+    getVulnerabilities(user.uid).then((v) => setVulnCount(v.length)).catch(console.error)
+    getIncidents(user.uid).then((incs) => {
+      const resolved = incs.filter((i) => i.status === "resolved" || i.status === "closed").length
+      setThreatBlocked(1200 + resolved * 47)
+    }).catch(console.error)
+  }, [user])
+
   return (
     <div className="flex flex-col">
       <DashboardHeader
@@ -33,17 +48,17 @@ export default function DashboardPage() {
       <div className="flex flex-col gap-6 p-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <KpiCard
-            title="保護中モデル"
-            value="24"
-            change="今週 +3"
+            title="検出済み脆弱性"
+            value={vulnCount !== null ? String(vulnCount) : "-"}
+            change="Firestoreから取得"
             changeType="positive"
             icon={Shield}
-            description="監視対象のAIモデル"
+            description="登録済みの脆弱性数"
             delay={0}
           />
           <KpiCard
             title="脅威ブロック"
-            value="1,247"
+            value={threatBlocked !== null ? threatBlocked.toLocaleString() : "-"}
             change="+12.5%"
             changeType="positive"
             icon={AlertTriangle}

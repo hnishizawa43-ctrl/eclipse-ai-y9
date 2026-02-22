@@ -13,109 +13,7 @@ import {
   User,
   Download,
 } from "lucide-react"
-
-interface Incident {
-  id: string
-  title: string
-  description: string
-  severity: "critical" | "high" | "medium" | "low"
-  status: "open" | "investigating" | "resolved" | "closed"
-  model: string
-  assignee: string
-  createdAt: string
-  updatedAt: string
-  timeline: { time: string; action: string; actor: string }[]
-}
-
-const initialIncidents: Incident[] = [
-  {
-    id: "INC-2026-047",
-    title: "本番LLMに対する重大プロンプトインジェクション攻撃",
-    description: "GPT-4本番エンドポイントを標的とした高度なプロンプトインジェクション攻撃が検出されました。攻撃はシステムプロンプトと内部指示の抽出を試みました。",
-    severity: "critical",
-    status: "investigating",
-    model: "GPT-4 本番環境",
-    assignee: "セキュリティチーム",
-    createdAt: "2026-02-21 09:12",
-    updatedAt: "2026-02-21 10:45",
-    timeline: [
-      { time: "09:12", action: "自動モニタリングによりインシデント検知", actor: "システム" },
-      { time: "09:14", action: "セキュリティチームにアラート送信", actor: "システム" },
-      { time: "09:20", action: "調査開始", actor: "セキュリティチーム" },
-      { time: "09:45", action: "攻撃ベクター特定: Unicodeエンコーディングバイパス", actor: "セキュリティチーム" },
-      { time: "10:15", action: "一時的な入力フィルターを展開", actor: "セキュリティチーム" },
-      { time: "10:45", action: "根本原因分析を進行中", actor: "セキュリティチーム" },
-    ],
-  },
-  {
-    id: "INC-2026-046",
-    title: "カスタマーサポートBotでPIIデータ漏洩",
-    description: "定期モニタリング中にモデル出力から顧客PIIが検出されました。サポートBotが学習データからメールアドレスを不注意に露出しました。",
-    severity: "high",
-    status: "resolved",
-    model: "カスタマーサポートBot",
-    assignee: "データプライバシーチーム",
-    createdAt: "2026-02-20 14:30",
-    updatedAt: "2026-02-21 08:00",
-    timeline: [
-      { time: "14:30", action: "出力モニタリングでPIIを検出", actor: "システム" },
-      { time: "14:35", action: "モデル出力を一時制限", actor: "システム" },
-      { time: "15:00", action: "データプライバシーチームに通知", actor: "システム" },
-      { time: "16:30", action: "PIIパターン検出用の出力フィルター更新", actor: "データプライバシーチーム" },
-      { time: "08:00", action: "修正を検証しモデル復旧", actor: "データプライバシーチーム" },
-    ],
-  },
-  {
-    id: "INC-2026-045",
-    title: "レコメンドエンジンでモデルドリフト検出",
-    description: "レコメンドモデルで顕著な出力分布のシフトが検出されました。パフォーマンス指標が許容閾値を超えて劣化しています。",
-    severity: "medium",
-    status: "open",
-    model: "レコメンド v3",
-    assignee: "MLエンジニアリング",
-    createdAt: "2026-02-20 11:00",
-    updatedAt: "2026-02-20 11:00",
-    timeline: [
-      { time: "11:00", action: "ドリフトスコアが閾値超過 (0.18 > 0.10)", actor: "システム" },
-      { time: "11:05", action: "MLエンジニアリングにアラート送信", actor: "システム" },
-    ],
-  },
-  {
-    id: "INC-2026-044",
-    title: "不正APIアクセス試行",
-    description: "不明なIPレンジから内部LLMゲートウェイへの複数の不正アクセス試行が検出されました。",
-    severity: "high",
-    status: "closed",
-    model: "内部LLMゲートウェイ",
-    assignee: "セキュリティチーム",
-    createdAt: "2026-02-19 22:15",
-    updatedAt: "2026-02-20 09:30",
-    timeline: [
-      { time: "22:15", action: "異常アクセスパターンを検知", actor: "システム" },
-      { time: "22:16", action: "IPレンジを自動ブロック", actor: "システム" },
-      { time: "22:30", action: "セキュリティチームにアラート", actor: "システム" },
-      { time: "09:00", action: "調査完了 - ブルートフォース試行と確認", actor: "セキュリティチーム" },
-      { time: "09:30", action: "IPブラックリスト更新、インシデントクローズ", actor: "セキュリティチーム" },
-    ],
-  },
-  {
-    id: "INC-2026-043",
-    title: "採用AIでバイアススコア閾値超過",
-    description: "週次公平性監査で、採用評価AIが性別に関連する意思決定パターンで統計的に有意なバイアスを示しました。",
-    severity: "high",
-    status: "investigating",
-    model: "採用評価AI",
-    assignee: "倫理チーム",
-    createdAt: "2026-02-19 16:00",
-    updatedAt: "2026-02-20 14:00",
-    timeline: [
-      { time: "16:00", action: "週次公平性監査でバイアスパターン検出", actor: "システム" },
-      { time: "16:10", action: "モデルを本番から一時停止", actor: "システム" },
-      { time: "17:00", action: "倫理チームによるレビュー開始", actor: "倫理チーム" },
-      { time: "14:00", action: "バイアス除去データセットでの再学習進行中", actor: "倫理チーム" },
-    ],
-  },
-]
+import type { Incident } from "@/lib/firestore"
 
 const severityConfig = {
   critical: { className: "bg-destructive/15 text-destructive border-destructive/30", icon: AlertTriangle },
@@ -156,41 +54,37 @@ function exportIncidentCSV(incidents: Incident[]) {
   toast.success("インシデントレポートをエクスポートしました")
 }
 
-export function IncidentList() {
-  const [expandedId, setExpandedId] = useState<string | null>(initialIncidents[0].id)
-  const [incidents, setIncidents] = useState(initialIncidents)
+interface IncidentListProps {
+  incidents: Incident[]
+  onUpdateIncident: (id: string, data: Partial<Incident>) => void
+}
+
+export function IncidentList({ incidents, onUpdateIncident }: IncidentListProps) {
+  const [expandedId, setExpandedId] = useState<string | null>(incidents[0]?.id ?? null)
   const [assigneePickerId, setAssigneePickerId] = useState<string | null>(null)
 
   function advanceStatus(id: string) {
-    setIncidents((prev) =>
-      prev.map((inc) => {
-        if (inc.id !== id) return inc
-        const nextStatus = inc.status === "open" ? "investigating" : "resolved"
-        const action = nextStatus === "investigating" ? "調査を開始しました" : "インシデントを解決済みにしました"
-        toast.success(`${inc.id}: ${action}`)
-        return {
-          ...inc,
-          status: nextStatus as Incident["status"],
-          updatedAt: new Date().toISOString().slice(0, 16).replace("T", " "),
-          timeline: [...inc.timeline, { time: now(), action, actor: "あなた" }],
-        }
-      })
-    )
+    const inc = incidents.find((i) => i.id === id)
+    if (!inc) return
+    const nextStatus = inc.status === "open" ? "investigating" : "resolved"
+    const action = nextStatus === "investigating" ? "調査を開始しました" : "インシデントを解決済みにしました"
+    toast.success(`${inc.id}: ${action}`)
+    onUpdateIncident(id, {
+      status: nextStatus as Incident["status"],
+      updatedAt: new Date().toISOString().slice(0, 16).replace("T", " "),
+      timeline: [...inc.timeline, { time: now(), action, actor: "あなた" }],
+    })
   }
 
   function assignTo(incidentId: string, assignee: string) {
-    setIncidents((prev) =>
-      prev.map((inc) => {
-        if (inc.id !== incidentId) return inc
-        toast.success(`${inc.id}: ${assignee}に割り当てました`)
-        return {
-          ...inc,
-          assignee,
-          updatedAt: new Date().toISOString().slice(0, 16).replace("T", " "),
-          timeline: [...inc.timeline, { time: now(), action: `担当者を${assignee}に変更`, actor: "あなた" }],
-        }
-      })
-    )
+    const inc = incidents.find((i) => i.id === incidentId)
+    if (!inc) return
+    toast.success(`${inc.id}: ${assignee}に割り当てました`)
+    onUpdateIncident(incidentId, {
+      assignee,
+      updatedAt: new Date().toISOString().slice(0, 16).replace("T", " "),
+      timeline: [...inc.timeline, { time: now(), action: `担当者を${assignee}に変更`, actor: "あなた" }],
+    })
     setAssigneePickerId(null)
   }
 
@@ -239,18 +133,13 @@ export function IncidentList() {
                 <Badge variant="outline" className={cn("text-[10px]", statusConfig[incident.status].className)}>
                   {statusConfig[incident.status].label}
                 </Badge>
-                {isExpanded ? (
-                  <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                ) : (
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                )}
+                {isExpanded ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
               </div>
             </button>
 
             {isExpanded && (
               <div className="border-t border-border px-5 py-4">
                 <p className="text-sm text-muted-foreground mb-4">{incident.description}</p>
-
                 <div className="flex items-center gap-4 mb-4">
                   <div className="flex items-center gap-1.5">
                     <User className="h-3.5 w-3.5 text-muted-foreground" />
@@ -271,9 +160,7 @@ export function IncidentList() {
                           "h-2 w-2 rounded-full shrink-0 mt-1.5",
                           idx === incident.timeline.length - 1 ? "bg-primary" : "bg-muted-foreground/40"
                         )} />
-                        {idx < incident.timeline.length - 1 && (
-                          <div className="w-px flex-1 bg-border my-1" />
-                        )}
+                        {idx < incident.timeline.length - 1 && <div className="w-px flex-1 bg-border my-1" />}
                       </div>
                       <div className="pb-4">
                         <div className="flex items-center gap-2">
@@ -325,9 +212,7 @@ export function IncidentList() {
                     </>
                   )}
                   <button
-                    onClick={() => {
-                      exportIncidentCSV([incident])
-                    }}
+                    onClick={() => exportIncidentCSV([incident])}
                     className="rounded-md border border-border bg-secondary px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors ml-auto"
                   >
                     詳細レポート

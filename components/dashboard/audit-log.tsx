@@ -2,70 +2,28 @@
 
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
-import { FileText, CheckCircle2, AlertCircle, Download } from "lucide-react"
+import { FileText, CheckCircle2, AlertCircle, Download, Shield } from "lucide-react"
 import { toast } from "sonner"
-
-const auditEntries = [
-  {
-    id: "AUD-042",
-    action: "コンプライアンスレポート生成",
-    regulation: "EU AI Act",
-    user: "system",
-    timestamp: "2026-02-21 10:30",
-    type: "report" as const,
-  },
-  {
-    id: "AUD-041",
-    action: "リスク評価更新",
-    regulation: "ISO 42001",
-    user: "admin@eclipse.ai",
-    timestamp: "2026-02-21 09:15",
-    type: "update" as const,
-  },
-  {
-    id: "AUD-040",
-    action: "非準拠アラート解決",
-    regulation: "米国大統領令",
-    user: "admin@eclipse.ai",
-    timestamp: "2026-02-20 18:45",
-    type: "resolve" as const,
-  },
-  {
-    id: "AUD-039",
-    action: "新規要件追加",
-    regulation: "NIST AI RMF",
-    user: "system",
-    timestamp: "2026-02-20 14:20",
-    type: "update" as const,
-  },
-  {
-    id: "AUD-038",
-    action: "フル監査レポートエクスポート",
-    regulation: "SOC 2 Type II",
-    user: "admin@eclipse.ai",
-    timestamp: "2026-02-20 11:00",
-    type: "report" as const,
-  },
-  {
-    id: "AUD-037",
-    action: "バイアス評価完了",
-    regulation: "AI事業者ガイドライン",
-    user: "system",
-    timestamp: "2026-02-19 22:30",
-    type: "resolve" as const,
-  },
-]
+import type { AuditEntry } from "@/lib/firestore"
 
 const typeConfig = {
-  report: { icon: FileText, className: "text-primary" },
-  update: { icon: AlertCircle, className: "text-warning" },
-  resolve: { icon: CheckCircle2, className: "text-success" },
+  security: { icon: Shield, className: "text-destructive" },
+  compliance: { icon: FileText, className: "text-primary" },
+  model: { icon: AlertCircle, className: "text-warning" },
+  system: { icon: CheckCircle2, className: "text-success" },
 }
 
-function exportAuditCSV() {
-  const header = "ID,アクション,規制,ユーザー,日時"
-  const rows = auditEntries.map((e) =>
-    [e.id, `"${e.action}"`, e.regulation, e.user, e.timestamp].join(",")
+const typeLabels = {
+  security: "セキュリティ",
+  compliance: "コンプライアンス",
+  model: "モデル",
+  system: "システム",
+}
+
+function exportAuditCSV(entries: AuditEntry[]) {
+  const header = "アクション,対象,実行者,日時,カテゴリ"
+  const rows = entries.map((e) =>
+    [`"${e.action}"`, `"${e.target}"`, e.actor, e.timestamp, typeLabels[e.type]].join(",")
   )
   const csv = [header, ...rows].join("\n")
   const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" })
@@ -78,16 +36,32 @@ function exportAuditCSV() {
   toast.success("監査ログをCSVでエクスポートしました")
 }
 
-export function AuditLog() {
+interface AuditLogProps {
+  entries: AuditEntry[]
+  loading?: boolean
+}
+
+export function AuditLog({ entries, loading }: AuditLogProps) {
+  if (loading) {
+    return (
+      <div className="rounded-lg border border-border bg-card p-5">
+        <h3 className="text-sm font-semibold text-foreground mb-4">監査ログ</h3>
+        <div className="flex items-center justify-center h-32">
+          <p className="text-sm text-muted-foreground">読み込み中...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="rounded-lg border border-border bg-card p-5">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h3 className="text-sm font-semibold text-foreground">監査ログ</h3>
-          <p className="text-xs text-muted-foreground">最近のコンプライアンス活動</p>
+          <p className="text-xs text-muted-foreground">{entries.length}件のコンプライアンス活動</p>
         </div>
         <button
-          onClick={exportAuditCSV}
+          onClick={() => exportAuditCSV(entries)}
           className="flex items-center gap-1.5 rounded-md border border-border bg-secondary px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
           <Download className="h-3 w-3" />
@@ -95,28 +69,30 @@ export function AuditLog() {
         </button>
       </div>
       <div className="flex flex-col gap-2">
-        {auditEntries.map((entry) => {
-          const Icon = typeConfig[entry.type].icon
+        {entries.map((entry, idx) => {
+          const config = typeConfig[entry.type]
+          const Icon = config.icon
           return (
             <div
-              key={entry.id}
+              key={entry.id ?? idx}
               className="flex items-center gap-3 rounded-md border border-border/50 bg-secondary/30 px-4 py-3"
             >
-              <Icon className={cn("h-4 w-4 shrink-0", typeConfig[entry.type].className)} />
+              <Icon className={cn("h-4 w-4 shrink-0", config.className)} />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-foreground truncate">{entry.action}</span>
                   <Badge variant="outline" className="text-[10px] bg-primary/10 text-primary border-primary/30 shrink-0">
-                    {entry.regulation}
+                    {typeLabels[entry.type]}
                   </Badge>
                 </div>
                 <div className="flex items-center gap-2 mt-0.5">
-                  <span className="text-[10px] text-muted-foreground">{entry.user}</span>
+                  <span className="text-[10px] text-muted-foreground">{entry.target}</span>
+                  <span className="text-[10px] text-muted-foreground/50">|</span>
+                  <span className="text-[10px] text-muted-foreground">{entry.actor}</span>
                   <span className="text-[10px] text-muted-foreground/50">|</span>
                   <span className="text-[10px] text-muted-foreground">{entry.timestamp}</span>
                 </div>
               </div>
-              <span className="text-[10px] font-mono text-muted-foreground shrink-0">{entry.id}</span>
             </div>
           )
         })}

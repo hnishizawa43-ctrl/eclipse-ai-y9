@@ -3,6 +3,7 @@
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/lib/auth-context"
+import { seedIfNeeded } from "@/lib/firestore"
 import { SidebarNav } from "@/components/dashboard/sidebar-nav"
 import { Shield } from "lucide-react"
 
@@ -15,6 +16,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       router.push("/login")
     }
   }, [user, loading, router])
+
+  // Seed Firestore on first login
+  useEffect(() => {
+    if (user) {
+      seedIfNeeded(user.uid).catch(console.error)
+    }
+  }, [user])
 
   if (loading) {
     return (

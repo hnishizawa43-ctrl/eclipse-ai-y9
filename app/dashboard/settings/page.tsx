@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAuth } from "@/lib/auth-context"
+import { getProfile, updateProfile, addAuditEntry } from "@/lib/firestore"
 import { DashboardHeader } from "@/components/dashboard/header"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -38,15 +39,15 @@ export default function SettingsPage() {
   const [activeSection, setActiveSection] = useState("profile")
 
   const [displayName, setDisplayName] = useState(user?.displayName || "")
-  const [organization, setOrganization] = useState("Eclipse Inc.")
-  const [role, setRole] = useState("管理者")
+  const [organization, setOrganization] = useState("")
+  const [role] = useState("管理者")
 
   const [notifCritical, setNotifCritical] = useState(true)
   const [notifWarning, setNotifWarning] = useState(true)
   const [notifInfo, setNotifInfo] = useState(false)
   const [notifEmail, setNotifEmail] = useState(true)
   const [notifSlack, setNotifSlack] = useState(false)
-  const [notifWeekly, setNotifWeekly] = useState(true)
+  const [notifWeekly, setNotifWeekly] = useState(false)
 
   const [apiKeys] = useState([
     { id: "key-1", name: "本番環境", key: "eclp_sk_prod_a1b2c3d4e5f6g7h8i9j0", created: "2026-01-15", lastUsed: "2026-02-22" },
@@ -57,12 +58,51 @@ export default function SettingsPage() {
   const [twoFactor, setTwoFactor] = useState(false)
   const [sessionTimeout, setSessionTimeout] = useState("30")
 
-  const handleSaveProfile = () => {
-    toast.success("プロフィールを保存しました")
+  // Load profile from Firestore
+  useEffect(() => {
+    if (!user) return
+    getProfile(user.uid).then((profile) => {
+      if (!profile) return
+      if (profile.displayName) setDisplayName(profile.displayName)
+      if (profile.organization) setOrganization(profile.organization)
+      setNotifCritical(profile.notifications?.critical ?? true)
+      setNotifWarning(profile.notifications?.high ?? true)
+      setNotifInfo(profile.notifications?.medium ?? false)
+      setNotifEmail(profile.notifications?.email ?? true)
+      setNotifSlack(profile.notifications?.slack ?? false)
+      setNotifWeekly(profile.notifications?.weekly ?? false)
+      setTwoFactor(profile.security?.twoFactor ?? false)
+      setSessionTimeout(String(profile.security?.sessionTimeout ?? 30))
+    }).catch(console.error)
+  }, [user])
+
+  const handleSaveProfile = async () => {
+    if (!user) return
+    try {
+      await updateProfile(user.uid, { displayName, organization } as Record<string, unknown>)
+      await addAuditEntry(user.uid, {
+        action: "プロフィール更新",
+        target: displayName || "プロフィール",
+        actor: user.email || "ユーザー",
+        timestamp: new Date().toLocaleString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" }).replace(/\//g, "-"),
+        type: "system",
+      })
+      toast.success("プロフィールをFirestoreに保存しました")
+    } catch {
+      toast.error("保存に失敗しました")
+    }
   }
 
-  const handleSaveNotifications = () => {
-    toast.success("通知設定を保存しました")
+  const handleSaveNotifications = async () => {
+    if (!user) return
+    try {
+      await updateProfile(user.uid, {
+        notifications: { critical: notifCritical, high: notifWarning, medium: notifInfo, low: false, email: notifEmail, slack: notifSlack, weekly: notifWeekly },
+      } as Record<string, unknown>)
+      toast.success("通知設定をFirestoreに保存しました")
+    } catch {
+      toast.error("保存に失敗しました")
+    }
   }
 
   const handleCopyKey = (key: string) => {
@@ -74,8 +114,16 @@ export default function SettingsPage() {
     toast.success(`${name}のAPIキーを再生成しました`)
   }
 
-  const handleSaveSecurity = () => {
-    toast.success("セキュリティ設定を保存しました")
+  const handleSaveSecurity = async () => {
+    if (!user) return
+    try {
+      await updateProfile(user.uid, {
+        security: { twoFactor, sessionTimeout: parseInt(sessionTimeout) || 30 },
+      } as Record<string, unknown>)
+      toast.success("セキュリティ設定をFirestoreに保存しました")
+    } catch {
+      toast.error("保存に失敗しました")
+    }
   }
 
   const toggleKeyVisibility = (id: string) => {
@@ -337,7 +385,7 @@ export default function SettingsPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-foreground">{"スキャン完了時に通知"}</p>
-                      <p className="text-xs text-muted-foreground">{"脆弱性スキャン完了後にPOSTリクエストを送信"}</p>
+                      <p className="text-xs text-muted-foreground">{"��弱性スキャン完了後にPOSTリクエストを送信"}</p>
                     </div>
                     <Switch />
                   </div>

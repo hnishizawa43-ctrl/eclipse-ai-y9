@@ -5,101 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { useState } from "react"
 import { Download } from "lucide-react"
 import { toast } from "sonner"
-
-export interface Vulnerability {
-  id: string
-  title: string
-  model: string
-  category: string
-  severity: "critical" | "high" | "medium" | "low"
-  status: "open" | "mitigated" | "investigating"
-  discoveredAt: string
-  cvss: number
-  isNew?: boolean
-}
-
-const defaultVulnerabilities: Vulnerability[] = [
-  {
-    id: "VLN-001",
-    title: "システムプロンプト上書きによるインジェクション",
-    model: "GPT-4 本番環境",
-    category: "インジェクション",
-    severity: "critical",
-    status: "open",
-    discoveredAt: "2026-02-21 09:15",
-    cvss: 9.8,
-  },
-  {
-    id: "VLN-002",
-    title: "反復クエリによる学習データ抽出",
-    model: "Claude-3 内部用",
-    category: "データ漏洩",
-    severity: "high",
-    status: "investigating",
-    discoveredAt: "2026-02-21 08:32",
-    cvss: 8.2,
-  },
-  {
-    id: "VLN-003",
-    title: "モデル逆推論攻撃サーフェス検出",
-    model: "レコメンド v3",
-    category: "モデルセキュリティ",
-    severity: "high",
-    status: "mitigated",
-    discoveredAt: "2026-02-20 22:10",
-    cvss: 7.5,
-  },
-  {
-    id: "VLN-004",
-    title: "画像分類器における敵対的入力バイパス",
-    model: "Vision Model v2",
-    category: "敵対的攻撃",
-    severity: "medium",
-    status: "open",
-    discoveredAt: "2026-02-20 16:45",
-    cvss: 6.1,
-  },
-  {
-    id: "VLN-005",
-    title: "出力トークンにおけるPII露出",
-    model: "カスタマーサポートBot",
-    category: "プライバシー",
-    severity: "critical",
-    status: "investigating",
-    discoveredAt: "2026-02-20 14:20",
-    cvss: 9.1,
-  },
-  {
-    id: "VLN-006",
-    title: "ハルシネーション率が閾値を超過",
-    model: "法務文書AI",
-    category: "信頼性",
-    severity: "medium",
-    status: "open",
-    discoveredAt: "2026-02-20 11:05",
-    cvss: 5.4,
-  },
-  {
-    id: "VLN-007",
-    title: "意思決定出力におけるバイアス検出",
-    model: "採用評価AI",
-    category: "公平性",
-    severity: "high",
-    status: "investigating",
-    discoveredAt: "2026-02-19 18:30",
-    cvss: 7.8,
-  },
-  {
-    id: "VLN-008",
-    title: "エンコーディング経由のジェイルブレイク",
-    model: "GPT-4 本番環境",
-    category: "インジェクション",
-    severity: "low",
-    status: "mitigated",
-    discoveredAt: "2026-02-19 09:00",
-    cvss: 3.2,
-  },
-]
+import type { Vulnerability } from "@/lib/firestore"
 
 const severityLabels = { critical: "重大", high: "高", medium: "中", low: "低" }
 const statusLabels = { open: "未対応", investigating: "調査中", mitigated: "対処済み" }
@@ -135,21 +41,20 @@ function exportVulnCSV(vulns: Vulnerability[]) {
 }
 
 interface ScanResultsTableProps {
-  extraVulnerabilities?: Vulnerability[]
+  vulnerabilities: Vulnerability[]
 }
 
-export function ScanResultsTable({ extraVulnerabilities = [] }: ScanResultsTableProps) {
+export function ScanResultsTable({ vulnerabilities }: ScanResultsTableProps) {
   const [filter, setFilter] = useState<"all" | "critical" | "high" | "medium" | "low">("all")
 
-  const allVulnerabilities = [...extraVulnerabilities, ...defaultVulnerabilities]
-  const filtered = filter === "all" ? allVulnerabilities : allVulnerabilities.filter(v => v.severity === filter)
+  const filtered = filter === "all" ? vulnerabilities : vulnerabilities.filter(v => v.severity === filter)
 
   return (
     <div className="rounded-lg border border-border bg-card">
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
         <div>
           <h3 className="text-sm font-semibold text-foreground">スキャン結果</h3>
-          <p className="text-xs text-muted-foreground">{allVulnerabilities.length}件の脆弱性を検出</p>
+          <p className="text-xs text-muted-foreground">{vulnerabilities.length}件の脆弱性を検出</p>
         </div>
         <div className="flex items-center gap-2">
           <button
