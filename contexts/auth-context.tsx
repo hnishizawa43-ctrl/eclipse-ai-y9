@@ -12,7 +12,7 @@ import {
   updateProfile,
   type User,
 } from "firebase/auth"
-import { auth } from "@/lib/firebase"
+import { auth, isFirebaseConfigured } from "@/lib/firebase"
 import { useRouter } from "next/navigation"
 
 interface AuthContextType {
@@ -34,6 +34,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter()
 
   useEffect(() => {
+    if (!isFirebaseConfigured || !auth) {
+      setLoading(false)
+      return
+    }
+
     // Handle Google redirect result
     getRedirectResult(auth).catch(() => {
       // Handle redirect error silently
@@ -48,19 +53,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const login = async (email: string, password: string) => {
+    if (!auth) throw new Error("Firebase is not configured. Please set Firebase environment variables.")
     await signInWithEmailAndPassword(auth, email, password)
   }
 
   const loginWithGoogle = async () => {
+    if (!auth) throw new Error("Firebase is not configured. Please set Firebase environment variables.")
     await signInWithRedirect(auth, googleProvider)
   }
 
   const register = async (email: string, password: string, displayName: string) => {
+    if (!auth) throw new Error("Firebase is not configured. Please set Firebase environment variables.")
     const credential = await createUserWithEmailAndPassword(auth, email, password)
     await updateProfile(credential.user, { displayName })
   }
 
   const logout = async () => {
+    if (!auth) throw new Error("Firebase is not configured. Please set Firebase environment variables.")
     await signOut(auth)
     router.push("/login")
   }
