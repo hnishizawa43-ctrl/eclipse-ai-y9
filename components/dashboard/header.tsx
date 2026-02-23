@@ -15,8 +15,9 @@ import {
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
 import { useAuth } from "@/contexts/auth-context"
+import { useState } from "react"
 
-const notifications = [
+const initialNotifications = [
   {
     id: 1,
     icon: AlertTriangle,
@@ -48,6 +49,19 @@ const notifications = [
 
 export function DashboardHeader({ title, description }: { title: string; description?: string }) {
   const { user, logout } = useAuth()
+  const [notifications, setNotifications] = useState(initialNotifications)
+
+  const unreadCount = notifications.filter((n) => n.unread).length
+
+  const handleMarkAllRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })))
+  }
+
+  const handleMarkRead = (id: number) => {
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, unread: false } : n))
+    )
+  }
 
   const displayName = user?.displayName || user?.email?.split("@")[0] || "User"
   const email = user?.email || ""
@@ -75,21 +89,31 @@ export function DashboardHeader({ title, description }: { title: string; descrip
           <PopoverTrigger asChild>
             <button className="relative flex h-9 w-9 items-center justify-center rounded-md border border-border bg-secondary text-muted-foreground hover:text-foreground hover:bg-accent/10 transition-colors">
               <Bell className="h-4 w-4" />
-              <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-destructive text-destructive-foreground border-0">
-                {notifications.length}
-              </Badge>
+              {unreadCount > 0 && (
+                <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-destructive text-destructive-foreground border-0">
+                  {unreadCount}
+                </Badge>
+              )}
             </button>
           </PopoverTrigger>
           <PopoverContent align="end" className="w-80 p-0">
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
               <h3 className="text-sm font-semibold text-foreground">通知</h3>
-              <button className="text-xs text-primary hover:underline">すべて既読にする</button>
+              {unreadCount > 0 && (
+                <button
+                  className="text-xs text-primary hover:underline"
+                  onClick={handleMarkAllRead}
+                >
+                  すべて既読にする
+                </button>
+              )}
             </div>
             <div className="max-h-80 overflow-y-auto">
               {notifications.map((notification) => (
                 <div
                   key={notification.id}
                   className="flex gap-3 px-4 py-3 hover:bg-secondary/50 transition-colors cursor-pointer border-b border-border last:border-b-0"
+                  onClick={() => handleMarkRead(notification.id)}
                 >
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary">
                     <notification.icon className={`h-4 w-4 ${notification.iconColor}`} />
