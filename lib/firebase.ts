@@ -19,7 +19,6 @@ const isFirebaseConfigured = true
 try {
   app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
   auth = getAuth(app)
-  console.log("[v0] Firebase initialized successfully")
 } catch (e: unknown) {
   const err = e as { code?: string; message?: string }
   console.error("[v0] Firebase init error:", err.code, err.message)
