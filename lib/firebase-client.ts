@@ -1,8 +1,3 @@
-/*
- * Firebase client configuration
- * Updated: force cache invalidation
- */
-
 import { initializeApp, getApps, type FirebaseApp } from "firebase/app"
 import { getAuth, type Auth } from "firebase/auth"
 
@@ -24,9 +19,10 @@ const isFirebaseConfigured = true
 try {
   app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
   auth = getAuth(app)
+  console.log("[v0] Firebase initialized successfully")
 } catch (e: unknown) {
   const err = e as { code?: string; message?: string }
-  console.error("Firebase init error:", err.code, err.message)
+  console.error("[v0] Firebase init error:", err.code, err.message)
   firebaseError =
     err.code === "auth/invalid-api-key"
       ? "Firebase APIキーが無効です。正しいAPIキーを設定してください。"
