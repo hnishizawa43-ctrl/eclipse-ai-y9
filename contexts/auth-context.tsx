@@ -12,7 +12,7 @@ import {
   updateProfile,
   type User,
 } from "firebase/auth"
-import { auth, isFirebaseConfigured } from "@/lib/firebase"
+import { auth, isFirebaseConfigured, firebaseError } from "@/lib/firebase"
 import { useRouter } from "next/navigation"
 
 interface AuthContextType {
@@ -52,25 +52,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => unsubscribe()
   }, [])
 
+  const ensureAuth = () => {
+    if (!auth) {
+      const err = new Error(firebaseError || "Firebase is not configured.") as Error & { code?: string }
+      err.code = "auth/configuration-error"
+      throw err
+    }
+    return auth
+  }
+
   const login = async (email: string, password: string) => {
-    if (!auth) throw new Error("Firebase is not configured. Please set Firebase environment variables.")
-    await signInWithEmailAndPassword(auth, email, password)
+    const a = ensureAuth()
+    await signInWithEmailAndPassword(a, email, password)
   }
 
   const loginWithGoogle = async () => {
-    if (!auth) throw new Error("Firebase is not configured. Please set Firebase environment variables.")
-    await signInWithRedirect(auth, googleProvider)
+    const a = ensureAuth()
+    await signInWithRedirect(a, googleProvider)
   }
 
   const register = async (email: string, password: string, displayName: string) => {
-    if (!auth) throw new Error("Firebase is not configured. Please set Firebase environment variables.")
-    const credential = await createUserWithEmailAndPassword(auth, email, password)
+    const a = ensureAuth()
+    const credential = await createUserWithEmailAndPassword(a, email, password)
     await updateProfile(credential.user, { displayName })
   }
 
   const logout = async () => {
-    if (!auth) throw new Error("Firebase is not configured. Please set Firebase environment variables.")
-    await signOut(auth)
+    const a = ensureAuth()
+    await signOut(a)
     router.push("/login")
   }
 

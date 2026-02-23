@@ -12,15 +12,27 @@ const firebaseConfig = {
 
 // Check if Firebase config is available
 const isFirebaseConfigured = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId)
-console.log("[v0] Firebase configured:", isFirebaseConfigured, "API key present:", Boolean(firebaseConfig.apiKey), "API key prefix:", firebaseConfig.apiKey?.substring(0, 8))
 
 // Initialize Firebase only once and only if configured
 let app: FirebaseApp | null = null
 let auth: Auth | null = null
+let firebaseError: string | null = null
 
 if (isFirebaseConfigured) {
-  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
-  auth = getAuth(app)
+  try {
+    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
+    auth = getAuth(app)
+  } catch (e: unknown) {
+    const err = e as { code?: string; message?: string }
+    console.error("[v0] Firebase initialization failed:", err.code, err.message)
+    firebaseError = err.code === "auth/invalid-api-key"
+      ? "Firebase APIキーが無効です。正しいAPIキーを設定してください。"
+      : `Firebase初期化エラー: ${err.message}`
+    app = null
+    auth = null
+  }
+} else {
+  firebaseError = "Firebase環境変数が設定されていません。"
 }
 
-export { app, auth, isFirebaseConfigured }
+export { app, auth, isFirebaseConfigured, firebaseError }
