@@ -34,6 +34,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter()
 
   useEffect(() => {
+    if (!auth) {
+      setLoading(false)
+      return
+    }
+
     // Handle Google redirect result
     getRedirectResult(auth).catch(() => {
       // Handle redirect error silently
