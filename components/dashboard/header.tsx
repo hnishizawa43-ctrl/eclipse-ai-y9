@@ -14,6 +14,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
 const notifications = [
   {
@@ -46,6 +48,32 @@ const notifications = [
 ]
 
 export function DashboardHeader({ title, description }: { title: string; description?: string }) {
+  const router = useRouter()
+  const [userName, setUserName] = useState("Eclipse Admin")
+  const [userEmail, setUserEmail] = useState("admin@eclipse-ai.com")
+  const [initials, setInitials] = useState("EC")
+
+  useEffect(() => {
+    const auth = localStorage.getItem("eclipse-auth")
+    if (auth) {
+      try {
+        const parsed = JSON.parse(auth)
+        if (parsed.name) setUserName(parsed.name)
+        if (parsed.email) setUserEmail(parsed.email)
+        if (parsed.name) {
+          setInitials(parsed.name.slice(0, 2).toUpperCase())
+        }
+      } catch {
+        // ignore
+      }
+    }
+  }, [])
+
+  const handleLogout = () => {
+    localStorage.removeItem("eclipse-auth")
+    router.push("/login")
+  }
+
   return (
     <header className="flex items-center justify-between border-b border-border bg-card px-6 py-4">
       <div>
@@ -113,20 +141,20 @@ export function DashboardHeader({ title, description }: { title: string; descrip
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold cursor-pointer hover:opacity-90 transition-opacity">
-              EC
+              {initials}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>
               <div className="flex flex-col gap-1">
-                <p className="text-sm font-medium text-foreground">Eclipse Admin</p>
-                <p className="text-xs text-muted-foreground">admin@eclipse-ai.com</p>
+                <p className="text-sm font-medium text-foreground">{userName}</p>
+                <p className="text-xs text-muted-foreground">{userEmail}</p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem asChild>
-                <Link href="/dashboard" className="cursor-pointer">
+                <Link href="/dashboard/profile" className="cursor-pointer">
                   <User className="h-4 w-4" />
                   プロフィール
                 </Link>
@@ -139,7 +167,7 @@ export function DashboardHeader({ title, description }: { title: string; descrip
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer" variant="destructive">
+            <DropdownMenuItem className="cursor-pointer" variant="destructive" onClick={handleLogout}>
               <LogOut className="h-4 w-4" />
               ログアウト
             </DropdownMenuItem>
