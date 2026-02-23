@@ -12,6 +12,7 @@ const firebaseConfig = {
 
 // Check if Firebase config is available
 const isFirebaseConfigured = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId)
+console.log("[v0] Firebase configured:", isFirebaseConfigured, "API key present:", Boolean(firebaseConfig.apiKey), "API key prefix:", firebaseConfig.apiKey?.substring(0, 8))
 
 // Initialize Firebase only once and only if configured
 let app: FirebaseApp | null = null
