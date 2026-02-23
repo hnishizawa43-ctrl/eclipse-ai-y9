@@ -35,8 +35,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Handle Google redirect result
-    getRedirectResult(auth).catch((error) => {
-      console.error("[v0] Google redirect error:", error)
+    getRedirectResult(auth).catch(() => {
+      // Handle redirect error silently
     })
 
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
