@@ -56,9 +56,10 @@ export default function LoginPage() {
     setIsGoogleSubmitting(true)
     try {
       await loginWithGoogle()
-      router.push("/dashboard")
+      // signInWithRedirect will navigate away, no need to push
     } catch (err: unknown) {
-      const firebaseError = err as { code?: string }
+      console.log("[v0] Google login error:", err)
+      const firebaseError = err as { code?: string; message?: string }
       if (firebaseError.code !== "auth/popup-closed-by-user") {
         setError(getFirebaseErrorMessage(firebaseError.code || ""))
       }
