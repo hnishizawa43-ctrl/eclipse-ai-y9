@@ -14,8 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useAuth } from "@/contexts/auth-context"
 
 const notifications = [
   {
@@ -48,31 +47,11 @@ const notifications = [
 ]
 
 export function DashboardHeader({ title, description }: { title: string; description?: string }) {
-  const router = useRouter()
-  const [userName, setUserName] = useState("Eclipse Admin")
-  const [userEmail, setUserEmail] = useState("admin@eclipse-ai.com")
-  const [initials, setInitials] = useState("EC")
+  const { user, logout } = useAuth()
 
-  useEffect(() => {
-    const auth = localStorage.getItem("eclipse-auth")
-    if (auth) {
-      try {
-        const parsed = JSON.parse(auth)
-        if (parsed.name) setUserName(parsed.name)
-        if (parsed.email) setUserEmail(parsed.email)
-        if (parsed.name) {
-          setInitials(parsed.name.slice(0, 2).toUpperCase())
-        }
-      } catch {
-        // ignore
-      }
-    }
-  }, [])
-
-  const handleLogout = () => {
-    localStorage.removeItem("eclipse-auth")
-    router.push("/login")
-  }
+  const displayName = user?.displayName || user?.email?.split("@")[0] || "User"
+  const email = user?.email || ""
+  const initials = displayName.slice(0, 2).toUpperCase()
 
   return (
     <header className="flex items-center justify-between border-b border-border bg-card px-6 py-4">
@@ -147,8 +126,8 @@ export function DashboardHeader({ title, description }: { title: string; descrip
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>
               <div className="flex flex-col gap-1">
-                <p className="text-sm font-medium text-foreground">{userName}</p>
-                <p className="text-xs text-muted-foreground">{userEmail}</p>
+                <p className="text-sm font-medium text-foreground">{displayName}</p>
+                <p className="text-xs text-muted-foreground">{email}</p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
@@ -167,7 +146,7 @@ export function DashboardHeader({ title, description }: { title: string; descrip
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer" variant="destructive" onClick={handleLogout}>
+            <DropdownMenuItem className="cursor-pointer" variant="destructive" onClick={logout}>
               <LogOut className="h-4 w-4" />
               ログアウト
             </DropdownMenuItem>
