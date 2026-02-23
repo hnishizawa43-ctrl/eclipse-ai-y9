@@ -35,11 +35,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!isFirebaseConfigured || !auth) {
+      console.warn("[v0] Firebase not available, skipping auth listener")
       setLoading(false)
       return
     }
 
-    // Handle Google redirect result
     getRedirectResult(auth).catch(() => {
       // Handle redirect error silently
     })
@@ -54,7 +54,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const ensureAuth = () => {
     if (!auth) {
-      const err = new Error(firebaseError || "Firebase is not configured.") as Error & { code?: string }
+      const err = new Error(
+        firebaseError || "Firebase is not configured."
+      ) as Error & { code?: string }
       err.code = "auth/configuration-error"
       throw err
     }
@@ -71,7 +73,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await signInWithRedirect(a, googleProvider)
   }
 
-  const register = async (email: string, password: string, displayName: string) => {
+  const register = async (
+    email: string,
+    password: string,
+    displayName: string
+  ) => {
     const a = ensureAuth()
     const credential = await createUserWithEmailAndPassword(a, email, password)
     await updateProfile(credential.user, { displayName })
@@ -84,7 +90,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, loginWithGoogle, register, logout }}>
+    <AuthContext.Provider
+      value={{ user, loading, login, loginWithGoogle, register, logout }}
+    >
       {children}
     </AuthContext.Provider>
   )
