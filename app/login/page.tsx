@@ -28,8 +28,8 @@ export default function LoginPage() {
     }
   }, [user, loading, router])
 
-  const getFirebaseErrorMessage = (code: string) => {
-    switch (code) {
+  const getFirebaseErrorMessage = (error: { code?: string; message?: string }) => {
+    switch (error.code) {
       case "auth/invalid-email":
         return "メールアドレスの形式が正しくありません。"
       case "auth/user-disabled":
@@ -46,6 +46,10 @@ export default function LoginPage() {
         return "パスワードは6文字以上にしてください。"
       case "auth/too-many-requests":
         return "ログイン試行が多すぎます。しばらく待ってからお試しください。"
+      case "auth/configuration-error":
+        return error.message || "Firebase設定エラーが発生しました。"
+      case "auth/invalid-api-key":
+        return "Firebase APIキーが無効です。環境変数を確認してください。"
       default:
         return "認証エラーが発生しました。もう一度お試しください。"
     }
@@ -59,9 +63,9 @@ export default function LoginPage() {
       // signInWithRedirect will navigate away, no need to push
     } catch (err: unknown) {
       // Google login error
-      const firebaseError = err as { code?: string; message?: string }
-      if (firebaseError.code !== "auth/popup-closed-by-user") {
-        setError(getFirebaseErrorMessage(firebaseError.code || ""))
+      const firebaseErr = err as { code?: string; message?: string }
+      if (firebaseErr.code !== "auth/popup-closed-by-user") {
+        setError(getFirebaseErrorMessage(firebaseErr))
       }
     } finally {
       setIsGoogleSubmitting(false)
@@ -77,8 +81,7 @@ export default function LoginPage() {
       await login(email, password)
       router.push("/dashboard")
     } catch (err: unknown) {
-      const firebaseError = err as { code?: string }
-      setError(getFirebaseErrorMessage(firebaseError.code || ""))
+      setError(getFirebaseErrorMessage(err as { code?: string; message?: string }))
     } finally {
       setIsSubmitting(false)
     }
@@ -99,8 +102,7 @@ export default function LoginPage() {
       await register(email, password, displayName)
       router.push("/dashboard")
     } catch (err: unknown) {
-      const firebaseError = err as { code?: string }
-      setError(getFirebaseErrorMessage(firebaseError.code || ""))
+      setError(getFirebaseErrorMessage(err as { code?: string; message?: string }))
     } finally {
       setIsSubmitting(false)
     }

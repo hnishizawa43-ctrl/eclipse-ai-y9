@@ -12,7 +12,7 @@ import {
   updateProfile,
   type User,
 } from "firebase/auth"
-import { auth } from "@/lib/firebase"
+import { auth, isFirebaseConfigured, firebaseError } from "@/lib/firebase-client"
 import { useRouter } from "next/navigation"
 
 interface AuthContextType {
@@ -34,12 +34,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter()
 
   useEffect(() => {
-    if (!auth) {
+    if (!isFirebaseConfigured || !auth) {
+      console.warn("[v0] Firebase not available, skipping auth listener")
       setLoading(false)
       return
     }
 
-    // Handle Google redirect result
     getRedirectResult(auth).catch(() => {
       // Handle redirect error silently
     })
@@ -52,26 +52,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => unsubscribe()
   }, [])
 
+  const ensureAuth = () => {
+    if (!auth) {
+      const err = new Error(
+        firebaseError || "Firebase is not configured."
+      ) as Error & { code?: string }
+      err.code = "auth/configuration-error"
+      throw err
+    }
+    return auth
+  }
+
   const login = async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password)
+    const a = ensureAuth()
+    await signInWithEmailAndPassword(a, email, password)
   }
 
   const loginWithGoogle = async () => {
-    await signInWithRedirect(auth, googleProvider)
+    const a = ensureAuth()
+    await signInWithRedirect(a, googleProvider)
   }
 
-  const register = async (email: string, password: string, displayName: string) => {
-    const credential = await createUserWithEmailAndPassword(auth, email, password)
+  const register = async (
+    email: string,
+    password: string,
+    displayName: string
+  ) => {
+    const a = ensureAuth()
+    const credential = await createUserWithEmailAndPassword(a, email, password)
     await updateProfile(credential.user, { displayName })
   }
 
   const logout = async () => {
-    await signOut(auth)
+    const a = ensureAuth()
+    await signOut(a)
     router.push("/login")
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, loginWithGoogle, register, logout }}>
+    <AuthContext.Provider
+      value={{ user, loading, login, loginWithGoogle, register, logout }}
+    >
       {children}
     </AuthContext.Provider>
   )
