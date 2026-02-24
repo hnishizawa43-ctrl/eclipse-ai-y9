@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-// Force rebuild
+// Force rebuild v2
 const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
