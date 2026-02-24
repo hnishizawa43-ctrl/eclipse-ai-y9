@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useState, useCallback, useEffect, useRef, type ReactNode } from "react"
 import { toast } from "sonner"
-import { AlertTriangle, Shield, Info, Activity } from "lucide-react"
 
 export type NotificationLevel = "critical" | "warning" | "info" | "success"
 
@@ -29,20 +28,6 @@ interface NotificationContextType {
 }
 
 const NotificationContext = createContext<NotificationContextType | null>(null)
-
-const levelIcons = {
-  critical: AlertTriangle,
-  warning: Activity,
-  info: Info,
-  success: Shield,
-}
-
-const levelStyles: Record<NotificationLevel, string> = {
-  critical: "border-l-4 border-l-destructive",
-  warning: "border-l-4 border-l-warning",
-  info: "border-l-4 border-l-primary",
-  success: "border-l-4 border-l-success",
-}
 
 const initialNotifications: Notification[] = [
   {
@@ -117,11 +102,12 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
 
       setNotifications((prev) => [newNotification, ...prev].slice(0, 50))
 
-      const Icon = levelIcons[n.level]
-      toast(n.title, {
+      const toastFn = n.level === "critical" ? toast.error
+        : n.level === "warning" ? toast.warning
+        : n.level === "success" ? toast.success
+        : toast.info
+      toastFn(n.title, {
         description: n.description,
-        icon: <Icon className="h-4 w-4" />,
-        className: levelStyles[n.level],
         duration: n.level === "critical" ? 8000 : 5000,
       })
     },

@@ -14,7 +14,6 @@ import {
   ChevronRight,
   Bell,
   FileBarChart,
-  Bot,
 } from "lucide-react"
 import { useState } from "react"
 

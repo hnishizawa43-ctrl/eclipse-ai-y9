@@ -1,7 +1,6 @@
 "use client"
 
 import { Bell, Search, User, Settings, LogOut, Shield, AlertTriangle, Info, Activity, Command } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import {
   DropdownMenu,
