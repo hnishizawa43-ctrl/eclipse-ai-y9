@@ -11,7 +11,7 @@ const regulations = [
 
 export function ComplianceOverview() {
   return (
-    <div className="rounded-lg border border-border bg-card p-5">
+    <div className="rounded-lg border border-border bg-card p-4 sm:p-5">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-foreground">コンプライアンス状況</h3>
         <span className="text-xs text-primary cursor-pointer hover:underline">詳細</span>

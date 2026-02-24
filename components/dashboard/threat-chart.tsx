@@ -39,8 +39,8 @@ export function ThreatChart() {
   }, [updateData])
 
   return (
-    <div className="rounded-lg border border-border bg-card p-5">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="rounded-lg border border-border bg-card p-4 sm:p-5">
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
             <h3 className="text-sm font-semibold text-foreground">脅威検知</h3>

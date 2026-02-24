@@ -122,18 +122,18 @@ export function ScanResultsTable() {
 
   return (
     <div className="rounded-lg border border-border bg-card">
-      <div className="flex items-center justify-between border-b border-border px-5 py-4">
+      <div className="flex flex-col gap-3 border-b border-border px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5 sm:py-4">
         <div>
           <h3 className="text-sm font-semibold text-foreground">スキャン結果</h3>
           <p className="text-xs text-muted-foreground">{vulnerabilities.length}件の脆弱性を検出</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
           {(["all", "critical", "high", "medium", "low"] as const).map((level) => (
             <button
               key={level}
               onClick={() => setFilter(level)}
               className={cn(
-                "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
+                "rounded-md px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap shrink-0",
                 filter === level
                   ? "bg-primary text-primary-foreground"
                   : "bg-secondary text-muted-foreground hover:text-foreground"

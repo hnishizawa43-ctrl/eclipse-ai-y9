@@ -31,8 +31,8 @@ export function LiveMetrics() {
   }, [updateData])
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="rounded-lg border border-border bg-card p-5">
+    <div className="flex flex-col gap-4 sm:gap-6">
+      <div className="rounded-lg border border-border bg-card p-4 sm:p-5">
         <div className="mb-4 flex items-center justify-between">
           <div>
             <h3 className="text-sm font-semibold text-foreground">リクエストボリューム</h3>
@@ -63,7 +63,7 @@ export function LiveMetrics() {
         </ResponsiveContainer>
       </div>
 
-      <div className="rounded-lg border border-border bg-card p-5">
+      <div className="rounded-lg border border-border bg-card p-4 sm:p-5">
         <div className="mb-4 flex items-center justify-between">
           <div>
             <h3 className="text-sm font-semibold text-foreground">異常検知</h3>

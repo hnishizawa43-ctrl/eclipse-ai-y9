@@ -16,13 +16,13 @@ const statusConfig = {
 
 export function ModelStatus() {
   return (
-    <div className="rounded-lg border border-border bg-card p-5">
+    <div className="rounded-lg border border-border bg-card p-4 sm:p-5">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-foreground">AIモデル一覧</h3>
         <span className="text-xs text-muted-foreground">{models.length}モデル登録済み</span>
       </div>
       <div className="flex flex-col">
-        <div className="grid grid-cols-4 gap-4 border-b border-border pb-2 mb-2">
+        <div className="hidden sm:grid grid-cols-4 gap-4 border-b border-border pb-2 mb-2">
           <span className="text-xs font-medium text-muted-foreground">モデル</span>
           <span className="text-xs font-medium text-muted-foreground">ステータス</span>
           <span className="text-xs font-medium text-muted-foreground text-right">脅威数</span>
@@ -31,20 +31,29 @@ export function ModelStatus() {
         {models.map((model) => (
           <div
             key={model.name}
-            className="grid grid-cols-4 gap-4 py-2.5 border-b border-border/50 last:border-0"
+            className="flex flex-col gap-1.5 py-3 border-b border-border/50 last:border-0 sm:grid sm:grid-cols-4 sm:gap-4 sm:py-2.5 sm:items-center"
           >
-            <span className="text-sm text-foreground truncate">{model.name}</span>
+            <div className="flex items-center justify-between sm:block">
+              <span className="text-sm text-foreground truncate">{model.name}</span>
+              <span className={cn(
+                "text-sm font-mono sm:hidden",
+                model.threats > 5 ? "text-destructive" : model.threats > 0 ? "text-warning" : "text-success"
+              )}>
+                {model.threats}
+              </span>
+            </div>
             <div className="flex items-center gap-1.5">
               <div className={cn("h-1.5 w-1.5 rounded-full", statusConfig[model.status].dotClass)} />
               <span className="text-xs text-muted-foreground">{statusConfig[model.status].label}</span>
+              <span className="text-xs text-muted-foreground sm:hidden">/ {model.lastScan}</span>
             </div>
             <span className={cn(
-              "text-sm font-mono text-right",
+              "text-sm font-mono text-right hidden sm:block",
               model.threats > 5 ? "text-destructive" : model.threats > 0 ? "text-warning" : "text-success"
             )}>
               {model.threats}
             </span>
-            <span className="text-xs text-muted-foreground text-right">{model.lastScan}</span>
+            <span className="text-xs text-muted-foreground text-right hidden sm:block">{model.lastScan}</span>
           </div>
         ))}
       </div>

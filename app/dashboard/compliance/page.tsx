@@ -11,7 +11,7 @@ export default function CompliancePage() {
         title="コンプライアンス & 監査"
         description="マルチ規制コンプライアンス管理と自動監査レポート"
       />
-      <div className="flex flex-col gap-6 p-6">
+      <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <KpiCard
             title="全体コンプライアンス"

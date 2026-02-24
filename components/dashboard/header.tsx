@@ -1,6 +1,6 @@
 "use client"
 
-import { Bell, Search, User, Settings, LogOut, Shield, AlertTriangle, Info } from "lucide-react"
+import { Bell, Search, User, Settings, LogOut, Shield, AlertTriangle, Info, Menu } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
@@ -16,6 +16,7 @@ import {
 import Link from "next/link"
 import { useAuth } from "@/contexts/auth-context"
 import { useState } from "react"
+import { useMobileSidebar } from "@/app/dashboard/layout"
 
 const initialNotifications = [
   {
@@ -50,6 +51,7 @@ const initialNotifications = [
 export function DashboardHeader({ title, description }: { title: string; description?: string }) {
   const { user, logout } = useAuth()
   const [notifications, setNotifications] = useState(initialNotifications)
+  const { setOpen: setMobileSidebarOpen } = useMobileSidebar()
 
   const unreadCount = notifications.filter((n) => n.unread).length
 
@@ -68,15 +70,24 @@ export function DashboardHeader({ title, description }: { title: string; descrip
   const initials = displayName.slice(0, 2).toUpperCase()
 
   return (
-    <header className="flex items-center justify-between border-b border-border bg-card px-6 py-4">
-      <div>
-        <h1 className="text-xl font-bold text-foreground tracking-tight">{title}</h1>
-        {description && (
-          <p className="text-sm text-muted-foreground mt-0.5">{description}</p>
-        )}
+    <header className="flex items-center justify-between border-b border-border bg-card px-4 py-3 md:px-6 md:py-4">
+      <div className="flex items-center gap-3 min-w-0">
+        <button
+          onClick={() => setMobileSidebarOpen(true)}
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-secondary text-muted-foreground hover:text-foreground hover:bg-accent/10 transition-colors md:hidden"
+          aria-label="メニューを開く"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+        <div className="min-w-0">
+          <h1 className="text-lg md:text-xl font-bold text-foreground tracking-tight truncate">{title}</h1>
+          {description && (
+            <p className="text-xs md:text-sm text-muted-foreground mt-0.5 truncate">{description}</p>
+          )}
+        </div>
       </div>
-      <div className="flex items-center gap-4">
-        <div className="relative hidden md:block">
+      <div className="flex items-center gap-2 md:gap-4 shrink-0">
+        <div className="relative hidden lg:block">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="検索..."

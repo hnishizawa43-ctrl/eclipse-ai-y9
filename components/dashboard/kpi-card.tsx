@@ -12,7 +12,7 @@ interface KpiCardProps {
 
 export function KpiCard({ title, value, change, changeType = "neutral", icon: Icon, description }: KpiCardProps) {
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-5">
+    <div className="flex flex-col gap-2 rounded-lg border border-border bg-card p-4 sm:gap-3 sm:p-5">
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium text-muted-foreground">{title}</span>
         <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10">
@@ -20,7 +20,7 @@ export function KpiCard({ title, value, change, changeType = "neutral", icon: Ic
         </div>
       </div>
       <div>
-        <span className="text-2xl font-bold text-foreground">{value}</span>
+        <span className="text-xl sm:text-2xl font-bold text-foreground">{value}</span>
         {change && (
           <span
             className={cn(

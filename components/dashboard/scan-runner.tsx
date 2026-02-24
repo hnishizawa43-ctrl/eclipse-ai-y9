@@ -40,13 +40,13 @@ export function ScanRunner() {
   }
 
   return (
-    <div className="rounded-lg border border-border bg-card p-5">
+    <div className="rounded-lg border border-border bg-card p-4 sm:p-5">
       <div className="mb-4 flex items-center gap-2">
         <Shield className="h-4 w-4 text-primary" />
         <h3 className="text-sm font-semibold text-foreground">セキュリティスキャン実行</h3>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 mb-4">
+      <div className="grid grid-cols-1 gap-2 mb-4 sm:grid-cols-2 sm:gap-3">
         {scanTypes.map((scan) => (
           <button
             key={scan.id}

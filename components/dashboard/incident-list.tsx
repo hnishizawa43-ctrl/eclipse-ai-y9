@@ -144,10 +144,10 @@ export function IncidentList() {
           <div key={incident.id} className="rounded-lg border border-border bg-card overflow-hidden">
             <button
               onClick={() => setExpandedId(isExpanded ? null : incident.id)}
-              className="flex w-full items-center gap-4 px-5 py-4 text-left hover:bg-secondary/30 transition-colors"
+              className="flex w-full items-start gap-3 px-4 py-3 text-left hover:bg-secondary/30 transition-colors sm:items-center sm:gap-4 sm:px-5 sm:py-4"
             >
               <SeverityIcon className={cn(
-                "h-4 w-4 shrink-0",
+                "h-4 w-4 shrink-0 mt-1 sm:mt-0",
                 incident.severity === "critical" ? "text-destructive" :
                 incident.severity === "high" ? "text-chart-4" :
                 incident.severity === "medium" ? "text-warning" : "text-primary"
@@ -155,15 +155,23 @@ export function IncidentList() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-xs font-mono text-primary">{incident.id}</span>
-                  <span className="text-sm font-medium text-foreground truncate">{incident.title}</span>
+                  <span className="text-sm font-medium text-foreground line-clamp-2 sm:truncate">{incident.title}</span>
                 </div>
-                <div className="flex items-center gap-3 mt-1">
+                <div className="flex items-center gap-3 mt-1 flex-wrap">
                   <span className="text-[11px] text-muted-foreground">{incident.model}</span>
-                  <span className="text-[11px] text-muted-foreground/50">|</span>
+                  <span className="text-[11px] text-muted-foreground/50 hidden sm:inline">|</span>
                   <span className="text-[11px] text-muted-foreground">{incident.createdAt}</span>
                 </div>
+                <div className="flex items-center gap-2 mt-2 sm:hidden">
+                  <Badge variant="outline" className={cn("text-[10px]", severityConfig[incident.severity].className)}>
+                    {severityLabels[incident.severity]}
+                  </Badge>
+                  <Badge variant="outline" className={cn("text-[10px]", statusConfig[incident.status].className)}>
+                    {statusConfig[incident.status].label}
+                  </Badge>
+                </div>
               </div>
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="hidden sm:flex items-center gap-2 shrink-0">
                 <Badge variant="outline" className={cn("text-[10px]", severityConfig[incident.severity].className)}>
                   {severityLabels[incident.severity]}
                 </Badge>
@@ -176,13 +184,20 @@ export function IncidentList() {
                   <ChevronDown className="h-4 w-4 text-muted-foreground" />
                 )}
               </div>
+              <div className="sm:hidden shrink-0 mt-1">
+                {isExpanded ? (
+                  <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                )}
+              </div>
             </button>
 
             {isExpanded && (
-              <div className="border-t border-border px-5 py-4">
-                <p className="text-sm text-muted-foreground mb-4">{incident.description}</p>
+              <div className="border-t border-border px-4 py-3 sm:px-5 sm:py-4">
+                <p className="text-xs sm:text-sm text-muted-foreground mb-4">{incident.description}</p>
 
-                <div className="flex items-center gap-4 mb-4">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4 mb-4">
                   <div className="flex items-center gap-1.5">
                     <User className="h-3.5 w-3.5 text-muted-foreground" />
                     <span className="text-xs text-foreground">{incident.assignee}</span>
@@ -217,7 +232,7 @@ export function IncidentList() {
                   ))}
                 </div>
 
-                <div className="flex items-center gap-2 mt-2 pt-3 border-t border-border">
+                <div className="flex flex-wrap items-center gap-2 mt-2 pt-3 border-t border-border">
                   {incident.status !== "closed" && incident.status !== "resolved" && (
                     <>
                       <button className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors">
