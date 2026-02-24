@@ -41,13 +41,9 @@ export default function VulnerabilitiesPage() {
           />
         </div>
 
-        <div className="flex flex-col gap-4 md:gap-6 xl:flex-row">
-          <div className="flex-1 min-w-0">
-            <ScanResultsTable />
-          </div>
-          <div className="w-full xl:w-80 shrink-0">
-            <ScanRunner />
-          </div>
+        <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-[1fr_320px]">
+          <ScanResultsTable />
+          <ScanRunner />
         </div>
       </div>
     </div>

@@ -45,7 +45,7 @@ export function ScanRunner() {
   }
 
   return (
-    <div className="rounded-lg border border-border bg-card p-4 sm:p-5 flex flex-col">
+    <div className="rounded-lg border border-border bg-card p-4 sm:p-5 flex flex-col lg:h-full">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary/10">

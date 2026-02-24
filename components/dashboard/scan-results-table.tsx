@@ -220,40 +220,49 @@ function DesktopTable({ filtered }: { filtered: Vulnerability[] }) {
     <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-border">
-            <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">ID</th>
-            <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">脆弱性</th>
-            <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">モデル</th>
-            <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">カテゴリ</th>
-            <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">深刻度</th>
-            <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">CVSS</th>
-            <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">ステータス</th>
+          <tr className="border-b border-border bg-secondary/30">
+            <th className="px-4 py-2.5 text-left text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">ID</th>
+            <th className="px-4 py-2.5 text-left text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">脆弱性</th>
+            <th className="px-4 py-2.5 text-left text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">モデル</th>
+            <th className="px-4 py-2.5 text-left text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">深刻度</th>
+            <th className="px-4 py-2.5 text-left text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">CVSS</th>
+            <th className="px-4 py-2.5 text-left text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">ステータス</th>
+            <th className="px-4 py-2.5 text-left text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">検出日</th>
           </tr>
         </thead>
         <tbody>
           {filtered.map((vuln) => (
-            <tr key={vuln.id} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
-              <td className="px-5 py-3 text-xs font-mono text-primary">{vuln.id}</td>
-              <td className="px-5 py-3">
-                <span className="text-sm text-foreground">{vuln.title}</span>
+            <tr
+              key={vuln.id}
+              className={cn(
+                "border-b border-border/50 transition-colors cursor-default",
+                vuln.severity === "critical"
+                  ? "hover:bg-destructive/5"
+                  : "hover:bg-secondary/40"
+              )}
+            >
+              <td className="px-4 py-3 text-xs font-mono text-primary whitespace-nowrap">{vuln.id}</td>
+              <td className="px-4 py-3">
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-sm font-medium text-foreground">{vuln.title}</span>
+                  <span className="text-[11px] text-muted-foreground">{vuln.category}</span>
+                </div>
               </td>
-              <td className="px-5 py-3 text-sm text-muted-foreground whitespace-nowrap">{vuln.model}</td>
-              <td className="px-5 py-3">
-                <span className="text-xs text-muted-foreground whitespace-nowrap">{vuln.category}</span>
-              </td>
-              <td className="px-5 py-3">
+              <td className="px-4 py-3 text-sm text-muted-foreground whitespace-nowrap">{vuln.model}</td>
+              <td className="px-4 py-3">
                 <Badge variant="outline" className={cn("text-[10px]", severityConfig[vuln.severity].className)}>
                   {severityLabels[vuln.severity]}
                 </Badge>
               </td>
-              <td className="px-5 py-3">
+              <td className="px-4 py-3">
                 <CvssBar value={vuln.cvss} />
               </td>
-              <td className="px-5 py-3">
+              <td className="px-4 py-3">
                 <Badge variant="outline" className={cn("text-[10px]", statusConfig[vuln.status].className)}>
                   {statusLabels[vuln.status]}
                 </Badge>
               </td>
+              <td className="px-4 py-3 text-xs text-muted-foreground whitespace-nowrap font-mono">{vuln.discoveredAt}</td>
             </tr>
           ))}
         </tbody>
@@ -277,29 +286,29 @@ export function ScanResultsTable() {
 
   return (
     <div className="rounded-lg border border-border bg-card">
-      <div className="flex flex-col gap-3 border-b border-border px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5 sm:py-4">
+      <div className="flex flex-col gap-3 border-b border-border px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5 sm:py-3.5">
         <div>
           <h3 className="text-sm font-semibold text-foreground">スキャン結果</h3>
-          <p className="text-xs text-muted-foreground">{vulnerabilities.length}件の脆弱性を検出</p>
+          <p className="text-xs text-muted-foreground mt-0.5">{filtered.length}件表示 / {vulnerabilities.length}件中</p>
         </div>
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+        <div className="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0 sm:rounded-lg sm:border sm:border-border sm:bg-secondary/50 sm:p-1">
           {(["all", "critical", "high", "medium", "low"] as const).map((level) => (
             <button
               key={level}
               onClick={() => setFilter(level)}
               className={cn(
-                "rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors whitespace-nowrap shrink-0 flex items-center gap-1.5",
+                "rounded-md px-2.5 py-1.5 text-xs font-medium transition-all whitespace-nowrap shrink-0 flex items-center gap-1.5",
                 filter === level
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-muted-foreground hover:text-foreground"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
               )}
             >
               {filterLabels[level]}
               <span className={cn(
-                "text-[10px] rounded-full px-1.5 py-0.5 tabular-nums leading-none",
+                "text-[10px] rounded-full min-w-[18px] px-1 py-0.5 tabular-nums leading-none text-center",
                 filter === level
                   ? "bg-primary-foreground/20 text-primary-foreground"
-                  : "bg-muted text-muted-foreground"
+                  : "bg-muted/80 text-muted-foreground"
               )}>
                 {counts[level]}
               </span>
