@@ -96,3 +96,178 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* === Glow Color Variables === */
+:root {
+  --glow-primary: oklch(0.62 0.18 260 / 0.4);
+  --glow-success: oklch(0.65 0.17 155 / 0.4);
+  --glow-destructive: oklch(0.55 0.22 27 / 0.4);
+  --glow-warning: oklch(0.75 0.17 70 / 0.4);
+}
+
+/* === Glassmorphism Utilities === */
+.glass-card {
+  background: oklch(0.17 0.008 260 / 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid oklch(0.3 0.01 260 / 0.3);
+}
+
+.glass-sidebar {
+  background: oklch(0.11 0.005 260 / 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-right: 1px solid oklch(0.25 0.01 260 / 0.4);
+}
+
+.glass-header {
+  background: oklch(0.13 0.005 260 / 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid oklch(0.25 0.01 260 / 0.3);
+}
+
+/* === Grid Background Pattern === */
+.grid-pattern {
+  background-image:
+    linear-gradient(oklch(0.25 0.01 260 / 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0.25 0.01 260 / 0.15) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* === Keyframe Animations === */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes slide-up-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scan-line {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+@keyframes orb-float-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(60px, -40px) scale(1.1); }
+  50% { transform: translate(-30px, -80px) scale(0.95); }
+  75% { transform: translate(-60px, 20px) scale(1.05); }
+}
+
+@keyframes orb-float-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(-50px, 50px) scale(1.05); }
+  50% { transform: translate(40px, 70px) scale(0.9); }
+  75% { transform: translate(70px, -30px) scale(1.1); }
+}
+
+@keyframes notification-bounce {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.2); }
+  50% { transform: scale(0.9); }
+  75% { transform: scale(1.1); }
+}
+
+/* === Animation Utilities === */
+.animate-shimmer {
+  animation: shimmer 3s ease-in-out infinite;
+  background-size: 200% 100%;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2.5s ease-in-out infinite;
+}
+
+.animate-slide-up-fade {
+  animation: slide-up-fade 0.5s ease-out both;
+}
+
+.animate-scan-line {
+  animation: scan-line 2s linear infinite;
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 1.5s ease-out infinite;
+}
+
+.animate-orb-1 {
+  animation: orb-float-1 20s ease-in-out infinite;
+}
+
+.animate-orb-2 {
+  animation: orb-float-2 25s ease-in-out infinite;
+}
+
+.animate-notification-bounce {
+  animation: notification-bounce 0.5s ease-out;
+}
+
+/* === Staggered Delays === */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+.stagger-6 { animation-delay: 0.3s; }
+.stagger-7 { animation-delay: 0.35s; }
+.stagger-8 { animation-delay: 0.4s; }
+
+/* === Glow Shadows === */
+.glow-primary { box-shadow: 0 0 20px var(--glow-primary); }
+.glow-success { box-shadow: 0 0 20px var(--glow-success); }
+.glow-destructive { box-shadow: 0 0 20px var(--glow-destructive); }
+.glow-warning { box-shadow: 0 0 20px var(--glow-warning); }
+
+/* === Hover Lift Effect === */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px oklch(0.62 0.18 260 / 0.15);
+}
+
+/* === Focus Glow for Inputs === */
+.focus-glow:focus {
+  box-shadow: 0 0 0 2px oklch(0.62 0.18 260 / 0.3);
+}
+
+/* === Smooth All Transitions === */
+.transition-all-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

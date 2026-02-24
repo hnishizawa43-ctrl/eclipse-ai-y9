@@ -16,86 +16,14 @@ interface Vulnerability {
 }
 
 const vulnerabilities: Vulnerability[] = [
-  {
-    id: "VLN-001",
-    title: "システムプロンプト上書きによるインジェクション",
-    model: "GPT-4 本番環境",
-    category: "インジェクション",
-    severity: "critical",
-    status: "open",
-    discoveredAt: "2026-02-21 09:15",
-    cvss: 9.8,
-  },
-  {
-    id: "VLN-002",
-    title: "反復クエリによる学習データ抽出",
-    model: "Claude-3 内部用",
-    category: "データ漏洩",
-    severity: "high",
-    status: "investigating",
-    discoveredAt: "2026-02-21 08:32",
-    cvss: 8.2,
-  },
-  {
-    id: "VLN-003",
-    title: "モデル逆推論攻撃サーフェス検出",
-    model: "レコメンド v3",
-    category: "モデルセキュリティ",
-    severity: "high",
-    status: "mitigated",
-    discoveredAt: "2026-02-20 22:10",
-    cvss: 7.5,
-  },
-  {
-    id: "VLN-004",
-    title: "画像分類器における敵対的入力バイパス",
-    model: "Vision Model v2",
-    category: "敵対的攻撃",
-    severity: "medium",
-    status: "open",
-    discoveredAt: "2026-02-20 16:45",
-    cvss: 6.1,
-  },
-  {
-    id: "VLN-005",
-    title: "出力トークンにおけるPII露出",
-    model: "カスタマーサポートBot",
-    category: "プライバシー",
-    severity: "critical",
-    status: "investigating",
-    discoveredAt: "2026-02-20 14:20",
-    cvss: 9.1,
-  },
-  {
-    id: "VLN-006",
-    title: "ハルシネーション率が閾値を超過",
-    model: "法務文書AI",
-    category: "信頼性",
-    severity: "medium",
-    status: "open",
-    discoveredAt: "2026-02-20 11:05",
-    cvss: 5.4,
-  },
-  {
-    id: "VLN-007",
-    title: "意思決定出力におけるバイアス検出",
-    model: "採用評価AI",
-    category: "公平性",
-    severity: "high",
-    status: "investigating",
-    discoveredAt: "2026-02-19 18:30",
-    cvss: 7.8,
-  },
-  {
-    id: "VLN-008",
-    title: "エンコーディング経由のジェイルブレイク",
-    model: "GPT-4 本番環境",
-    category: "インジェクション",
-    severity: "low",
-    status: "mitigated",
-    discoveredAt: "2026-02-19 09:00",
-    cvss: 3.2,
-  },
+  { id: "VLN-001", title: "システムプロンプト上書きによるインジェクション", model: "GPT-4 本番環境", category: "インジェクション", severity: "critical", status: "open", discoveredAt: "2026-02-21 09:15", cvss: 9.8 },
+  { id: "VLN-002", title: "反復クエリによる学習データ抽出", model: "Claude-3 内部用", category: "データ漏洩", severity: "high", status: "investigating", discoveredAt: "2026-02-21 08:32", cvss: 8.2 },
+  { id: "VLN-003", title: "モデル逆推論攻撃サーフェス検出", model: "レコメンド v3", category: "モデルセキュリティ", severity: "high", status: "mitigated", discoveredAt: "2026-02-20 22:10", cvss: 7.5 },
+  { id: "VLN-004", title: "画像分類器における敵対的入力バイパス", model: "Vision Model v2", category: "敵対的攻撃", severity: "medium", status: "open", discoveredAt: "2026-02-20 16:45", cvss: 6.1 },
+  { id: "VLN-005", title: "出力トークンにおけるPII露出", model: "カスタマーサポートBot", category: "プライバシー", severity: "critical", status: "investigating", discoveredAt: "2026-02-20 14:20", cvss: 9.1 },
+  { id: "VLN-006", title: "ハルシネーション率が閾値を超過", model: "法務文書AI", category: "信頼性", severity: "medium", status: "open", discoveredAt: "2026-02-20 11:05", cvss: 5.4 },
+  { id: "VLN-007", title: "意思決定出力におけるバイアス検出", model: "採用評価AI", category: "公平性", severity: "high", status: "investigating", discoveredAt: "2026-02-19 18:30", cvss: 7.8 },
+  { id: "VLN-008", title: "エンコーディング経由のジェイルブレイク", model: "GPT-4 本番環境", category: "インジェクション", severity: "low", status: "mitigated", discoveredAt: "2026-02-19 09:00", cvss: 3.2 },
 ]
 
 const severityLabels = { critical: "重大", high: "高", medium: "中", low: "低" }
@@ -121,11 +49,11 @@ export function ScanResultsTable() {
   const filtered = filter === "all" ? vulnerabilities : vulnerabilities.filter(v => v.severity === filter)
 
   return (
-    <div className="rounded-lg border border-border bg-card">
-      <div className="flex items-center justify-between border-b border-border px-5 py-4">
+    <div className="rounded-lg glass-card border-border/30 animate-slide-up-fade" style={{ animationDelay: "0.1s" }}>
+      <div className="flex items-center justify-between border-b border-border/30 px-5 py-4">
         <div>
-          <h3 className="text-sm font-semibold text-foreground">スキャン結果</h3>
-          <p className="text-xs text-muted-foreground">{vulnerabilities.length}件の脆弱性を検出</p>
+          <h3 className="text-sm font-semibold text-foreground">{"スキャン結果"}</h3>
+          <p className="text-xs text-muted-foreground">{vulnerabilities.length}{"件の脆弱性を検出"}</p>
         </div>
         <div className="flex items-center gap-2">
           {(["all", "critical", "high", "medium", "low"] as const).map((level) => (
@@ -133,10 +61,10 @@ export function ScanResultsTable() {
               key={level}
               onClick={() => setFilter(level)}
               className={cn(
-                "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
+                "rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200",
                 filter === level
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-muted-foreground hover:text-foreground"
+                  ? "bg-primary text-primary-foreground shadow-[0_0_10px_var(--glow-primary)]"
+                  : "bg-secondary/50 text-muted-foreground hover:text-foreground hover:bg-secondary"
               )}
             >
               {filterLabels[level]}
@@ -147,19 +75,23 @@ export function ScanResultsTable() {
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-border">
+            <tr className="border-b border-border/30">
               <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">ID</th>
-              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">脆弱性</th>
-              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">モデル</th>
-              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">カテゴリ</th>
-              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">深刻度</th>
+              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">{"脆弱性"}</th>
+              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">{"モデル"}</th>
+              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">{"カテゴリ"}</th>
+              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">{"深刻度"}</th>
               <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">CVSS</th>
-              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">ステータス</th>
+              <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">{"ステータス"}</th>
             </tr>
           </thead>
           <tbody>
-            {filtered.map((vuln) => (
-              <tr key={vuln.id} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
+            {filtered.map((vuln, index) => (
+              <tr
+                key={vuln.id}
+                className="border-b border-border/20 transition-all duration-200 hover:bg-secondary/30 animate-slide-up-fade"
+                style={{ animationDelay: `${index * 0.04}s` }}
+              >
                 <td className="px-5 py-3 text-xs font-mono text-primary">{vuln.id}</td>
                 <td className="px-5 py-3">
                   <span className="text-sm text-foreground">{vuln.title}</span>

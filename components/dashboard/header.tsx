@@ -68,54 +68,56 @@ export function DashboardHeader({ title, description }: { title: string; descrip
   const initials = displayName.slice(0, 2).toUpperCase()
 
   return (
-    <header className="flex items-center justify-between border-b border-border bg-card px-6 py-4">
-      <div>
+    <header className="glass-header flex items-center justify-between px-6 py-4">
+      <div className="animate-slide-up-fade">
         <h1 className="text-xl font-bold text-foreground tracking-tight">{title}</h1>
         {description && (
           <p className="text-sm text-muted-foreground mt-0.5">{description}</p>
         )}
       </div>
       <div className="flex items-center gap-4">
+        {/* Search with focus glow */}
         <div className="relative hidden md:block">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="検索..."
-            className="w-64 pl-9 bg-secondary border-border text-foreground placeholder:text-muted-foreground"
+            className="w-64 pl-9 bg-secondary/50 border-border/50 text-foreground placeholder:text-muted-foreground transition-all duration-300 focus:border-primary/50 focus-glow"
           />
         </div>
 
-        {/* Notification Popover */}
+        {/* Notification Bell with bounce */}
         <Popover>
           <PopoverTrigger asChild>
-            <button className="relative flex h-9 w-9 items-center justify-center rounded-md border border-border bg-secondary text-muted-foreground hover:text-foreground hover:bg-accent/10 transition-colors">
+            <button className="relative flex h-9 w-9 items-center justify-center rounded-md border border-border/50 bg-secondary/50 text-muted-foreground hover:text-foreground hover:bg-accent/10 transition-all duration-200 hover:border-primary/30">
               <Bell className="h-4 w-4" />
               {unreadCount > 0 && (
-                <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-destructive text-destructive-foreground border-0">
+                <Badge className="absolute -top-1.5 -right-1.5 h-4 min-w-4 p-0 flex items-center justify-center text-[10px] bg-destructive text-destructive-foreground border-0 animate-notification-bounce" style={{ boxShadow: "0 0 8px var(--glow-destructive)" }}>
                   {unreadCount}
                 </Badge>
               )}
             </button>
           </PopoverTrigger>
-          <PopoverContent align="end" className="w-80 p-0">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-              <h3 className="text-sm font-semibold text-foreground">通知</h3>
+          <PopoverContent align="end" className="w-80 p-0 glass-card border-border/30">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border/30">
+              <h3 className="text-sm font-semibold text-foreground">{"通知"}</h3>
               {unreadCount > 0 && (
                 <button
-                  className="text-xs text-primary hover:underline"
+                  className="text-xs text-primary hover:underline transition-colors"
                   onClick={handleMarkAllRead}
                 >
-                  すべて既読にする
+                  {"すべて既読にする"}
                 </button>
               )}
             </div>
             <div className="max-h-80 overflow-y-auto">
-              {notifications.map((notification) => (
+              {notifications.map((notification, index) => (
                 <div
                   key={notification.id}
-                  className="flex gap-3 px-4 py-3 hover:bg-secondary/50 transition-colors cursor-pointer border-b border-border last:border-b-0"
+                  className="flex gap-3 px-4 py-3 hover:bg-secondary/30 transition-all duration-200 cursor-pointer border-b border-border/20 last:border-b-0 animate-slide-up-fade"
+                  style={{ animationDelay: `${index * 0.05}s` }}
                   onClick={() => handleMarkRead(notification.id)}
                 >
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary/80">
                     <notification.icon className={`h-4 w-4 ${notification.iconColor}`} />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -124,55 +126,58 @@ export function DashboardHeader({ title, description }: { title: string; descrip
                     <p className="text-xs text-muted-foreground mt-1">{notification.time}</p>
                   </div>
                   {notification.unread && (
-                    <div className="h-2 w-2 rounded-full bg-primary shrink-0 mt-1.5" />
+                    <div className="relative h-2 w-2 shrink-0 mt-1.5">
+                      <div className="absolute inset-0 rounded-full bg-primary" />
+                      <div className="absolute inset-0 rounded-full bg-primary animate-pulse-ring" />
+                    </div>
                   )}
                 </div>
               ))}
             </div>
-            <div className="border-t border-border px-4 py-2">
+            <div className="border-t border-border/30 px-4 py-2">
               <Link
                 href="/dashboard/incidents"
-                className="text-xs text-primary hover:underline block text-center"
+                className="text-xs text-primary hover:underline block text-center transition-colors"
               >
-                すべての通知を見る
+                {"すべての通知を見る"}
               </Link>
             </div>
           </PopoverContent>
         </Popover>
 
-        {/* Profile Dropdown */}
+        {/* Profile Avatar with hover ring */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold cursor-pointer hover:opacity-90 transition-opacity">
+            <button className="relative flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold cursor-pointer transition-all duration-300 hover:shadow-[0_0_20px_var(--glow-primary)] hover:scale-105">
               {initials}
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuContent align="end" className="w-56 glass-card border-border/30">
             <DropdownMenuLabel>
               <div className="flex flex-col gap-1">
                 <p className="text-sm font-medium text-foreground">{displayName}</p>
                 <p className="text-xs text-muted-foreground">{email}</p>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="bg-border/30" />
             <DropdownMenuGroup>
               <DropdownMenuItem asChild>
                 <Link href="/dashboard/profile" className="cursor-pointer">
                   <User className="h-4 w-4" />
-                  プロフィール
+                  {"プロフィール"}
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="/dashboard/settings" className="cursor-pointer">
                   <Settings className="h-4 w-4" />
-                  設定
+                  {"設定"}
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="bg-border/30" />
             <DropdownMenuItem className="cursor-pointer" variant="destructive" onClick={logout}>
               <LogOut className="h-4 w-4" />
-              ログアウト
+              {"ログアウト"}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

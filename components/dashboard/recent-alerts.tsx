@@ -30,9 +30,9 @@ const newAlertPool: Omit<Alert, "id" | "time">[] = [
 ]
 
 const severityConfig = {
-  critical: { label: "重大", className: "bg-destructive/15 text-destructive border-destructive/30" },
-  warning: { label: "警告", className: "bg-warning/15 text-warning border-warning/30" },
-  info: { label: "情報", className: "bg-primary/15 text-primary border-primary/30" },
+  critical: { label: "重大", className: "bg-destructive/15 text-destructive border-destructive/30", glowVar: "var(--glow-destructive)" },
+  warning: { label: "警告", className: "bg-warning/15 text-warning border-warning/30", glowVar: "var(--glow-warning)" },
+  info: { label: "情報", className: "bg-primary/15 text-primary border-primary/30", glowVar: "var(--glow-primary)" },
 }
 
 export function RecentAlerts() {
@@ -58,35 +58,46 @@ export function RecentAlerts() {
   }, [addAlert])
 
   return (
-    <div className="rounded-lg border border-border bg-card p-5">
+    <div className="rounded-lg glass-card border-border/30 p-5 animate-slide-up-fade" style={{ animationDelay: "0.2s" }}>
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h3 className="text-sm font-semibold text-foreground">最新アラート</h3>
-          <div className="flex h-2 w-2 rounded-full bg-success animate-pulse" />
+          <h3 className="text-sm font-semibold text-foreground">{"最新アラート"}</h3>
+          <div className="relative h-2 w-2">
+            <div className="absolute inset-0 rounded-full bg-success" />
+            <div className="absolute inset-0 rounded-full bg-success animate-pulse-ring" />
+          </div>
         </div>
-        <span className="text-xs text-primary cursor-pointer hover:underline">すべて表示</span>
+        <span className="text-xs text-primary cursor-pointer hover:underline transition-colors">{"すべて表示"}</span>
       </div>
       <div className="flex flex-col gap-3">
-        {alerts.map((alert) => (
-          <div
-            key={alert.id}
-            className="flex items-center justify-between rounded-md border border-border bg-secondary/50 px-3 py-2.5 animate-in fade-in slide-in-from-top-1 duration-300"
-          >
-            <div className="flex flex-col gap-0.5">
-              <span className="text-sm font-medium text-foreground">{alert.title}</span>
-              <span className="text-xs text-muted-foreground">{alert.model}</span>
+        {alerts.map((alert, index) => {
+          const config = severityConfig[alert.severity]
+          return (
+            <div
+              key={alert.id}
+              className="group flex items-center justify-between rounded-md border border-border/30 bg-secondary/30 px-3 py-2.5 transition-all duration-300 hover:bg-secondary/50 animate-slide-up-fade"
+              style={{
+                animationDelay: `${index * 0.05}s`,
+                borderLeftWidth: "2px",
+                borderLeftColor: alert.severity === "critical" ? "oklch(0.55 0.22 27)" : alert.severity === "warning" ? "oklch(0.75 0.17 70)" : "oklch(0.62 0.18 260)",
+              }}
+            >
+              <div className="flex flex-col gap-0.5">
+                <span className="text-sm font-medium text-foreground">{alert.title}</span>
+                <span className="text-xs text-muted-foreground">{alert.model}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Badge
+                  variant="outline"
+                  className={cn("text-[10px] font-medium", config.className)}
+                >
+                  {config.label}
+                </Badge>
+                <span className="text-xs text-muted-foreground whitespace-nowrap">{alert.time}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-3">
-              <Badge
-                variant="outline"
-                className={cn("text-[10px] font-medium", severityConfig[alert.severity].className)}
-              >
-                {severityConfig[alert.severity].label}
-              </Badge>
-              <span className="text-xs text-muted-foreground whitespace-nowrap">{alert.time}</span>
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

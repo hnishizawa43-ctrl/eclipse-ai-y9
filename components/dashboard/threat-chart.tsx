@@ -39,23 +39,30 @@ export function ThreatChart() {
   }, [updateData])
 
   return (
-    <div className="rounded-lg border border-border bg-card p-5">
+    <div className="rounded-lg glass-card border-border/30 p-5 animate-slide-up-fade">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold text-foreground">脅威検知</h3>
-            <div className="flex h-2 w-2 rounded-full bg-success animate-pulse" />
+            <h3 className="text-sm font-semibold text-foreground">{"脅威検知"}</h3>
+            {/* Pulse ring LIVE indicator */}
+            <div className="relative flex items-center gap-1.5">
+              <div className="relative h-2 w-2">
+                <div className="absolute inset-0 rounded-full bg-success" />
+                <div className="absolute inset-0 rounded-full bg-success animate-pulse-ring" />
+              </div>
+              <span className="text-[10px] font-medium text-success uppercase tracking-wider">LIVE</span>
+            </div>
           </div>
-          <p className="text-xs text-muted-foreground">過去24時間</p>
+          <p className="text-xs text-muted-foreground">{"過去24時間"}</p>
         </div>
         <div className="flex items-center gap-4 text-xs">
           <div className="flex items-center gap-1.5">
             <div className="h-2 w-2 rounded-full bg-chart-1" />
-            <span className="text-muted-foreground">検知</span>
+            <span className="text-muted-foreground">{"検知"}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="h-2 w-2 rounded-full bg-success" />
-            <span className="text-muted-foreground">ブロック</span>
+            <span className="text-muted-foreground">{"ブロック"}</span>
           </div>
         </div>
       </div>
@@ -63,30 +70,48 @@ export function ThreatChart() {
         <AreaChart data={data} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
           <defs>
             <linearGradient id="threatGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="oklch(0.62 0.18 260)" stopOpacity={0.3} />
-              <stop offset="95%" stopColor="oklch(0.62 0.18 260)" stopOpacity={0} />
+              <stop offset="0%" stopColor="oklch(0.62 0.18 260)" stopOpacity={0.4} />
+              <stop offset="50%" stopColor="oklch(0.62 0.18 260)" stopOpacity={0.1} />
+              <stop offset="100%" stopColor="oklch(0.62 0.18 260)" stopOpacity={0} />
             </linearGradient>
             <linearGradient id="blockedGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="oklch(0.65 0.17 155)" stopOpacity={0.3} />
-              <stop offset="95%" stopColor="oklch(0.65 0.17 155)" stopOpacity={0} />
+              <stop offset="0%" stopColor="oklch(0.65 0.17 155)" stopOpacity={0.4} />
+              <stop offset="50%" stopColor="oklch(0.65 0.17 155)" stopOpacity={0.1} />
+              <stop offset="100%" stopColor="oklch(0.65 0.17 155)" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.25 0.01 260)" />
+          <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.25 0.01 260 / 0.5)" />
           <XAxis dataKey="time" tick={{ fill: "oklch(0.6 0.02 260)", fontSize: 11 }} tickLine={false} axisLine={false} />
           <YAxis tick={{ fill: "oklch(0.6 0.02 260)", fontSize: 11 }} tickLine={false} axisLine={false} />
           <Tooltip
             contentStyle={{
-              backgroundColor: "oklch(0.17 0.008 260)",
-              border: "1px solid oklch(0.25 0.01 260)",
+              backgroundColor: "oklch(0.15 0.008 260 / 0.9)",
+              backdropFilter: "blur(12px)",
+              border: "1px solid oklch(0.3 0.01 260 / 0.4)",
               borderRadius: "8px",
               color: "oklch(0.95 0.01 260)",
               fontSize: "12px",
+              boxShadow: "0 8px 32px oklch(0 0 0 / 0.3)",
             }}
             labelFormatter={(label) => `時間: ${label}`}
             formatter={(value: number, name: string) => [value, name === "threats" ? "検知" : "ブロック"]}
           />
-          <Area type="monotone" dataKey="threats" stroke="oklch(0.62 0.18 260)" fill="url(#threatGradient)" strokeWidth={2} />
-          <Area type="monotone" dataKey="blocked" stroke="oklch(0.65 0.17 155)" fill="url(#blockedGradient)" strokeWidth={2} />
+          <Area
+            type="monotone"
+            dataKey="threats"
+            stroke="oklch(0.62 0.18 260)"
+            fill="url(#threatGradient)"
+            strokeWidth={2}
+            style={{ filter: "drop-shadow(0 0 4px oklch(0.62 0.18 260 / 0.4))" }}
+          />
+          <Area
+            type="monotone"
+            dataKey="blocked"
+            stroke="oklch(0.65 0.17 155)"
+            fill="url(#blockedGradient)"
+            strokeWidth={2}
+            style={{ filter: "drop-shadow(0 0 4px oklch(0.65 0.17 155 / 0.4))" }}
+          />
         </AreaChart>
       </ResponsiveContainer>
     </div>

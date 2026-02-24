@@ -9,44 +9,54 @@ const models = [
 ]
 
 const statusConfig = {
-  protected: { label: "保護中", dotClass: "bg-success" },
-  warning: { label: "警告", dotClass: "bg-warning" },
-  critical: { label: "危険", dotClass: "bg-destructive" },
+  protected: { label: "保護中", dotClass: "bg-success", glowVar: "var(--glow-success)" },
+  warning: { label: "警告", dotClass: "bg-warning", glowVar: "var(--glow-warning)" },
+  critical: { label: "危険", dotClass: "bg-destructive", glowVar: "var(--glow-destructive)" },
 }
 
 export function ModelStatus() {
   return (
-    <div className="rounded-lg border border-border bg-card p-5">
+    <div className="rounded-lg glass-card border-border/30 p-5 animate-slide-up-fade" style={{ animationDelay: "0.15s" }}>
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-foreground">AIモデル一覧</h3>
-        <span className="text-xs text-muted-foreground">{models.length}モデル登録済み</span>
+        <h3 className="text-sm font-semibold text-foreground">{"AIモデル一覧"}</h3>
+        <span className="text-xs text-muted-foreground">{models.length}{"モデル登録済み"}</span>
       </div>
       <div className="flex flex-col">
-        <div className="grid grid-cols-4 gap-4 border-b border-border pb-2 mb-2">
-          <span className="text-xs font-medium text-muted-foreground">モデル</span>
-          <span className="text-xs font-medium text-muted-foreground">ステータス</span>
-          <span className="text-xs font-medium text-muted-foreground text-right">脅威数</span>
-          <span className="text-xs font-medium text-muted-foreground text-right">最終スキャン</span>
+        <div className="grid grid-cols-4 gap-4 border-b border-border/30 pb-2 mb-2">
+          <span className="text-xs font-medium text-muted-foreground">{"モデル"}</span>
+          <span className="text-xs font-medium text-muted-foreground">{"ステータス"}</span>
+          <span className="text-xs font-medium text-muted-foreground text-right">{"脅威数"}</span>
+          <span className="text-xs font-medium text-muted-foreground text-right">{"最終スキャン"}</span>
         </div>
-        {models.map((model) => (
-          <div
-            key={model.name}
-            className="grid grid-cols-4 gap-4 py-2.5 border-b border-border/50 last:border-0"
-          >
-            <span className="text-sm text-foreground truncate">{model.name}</span>
-            <div className="flex items-center gap-1.5">
-              <div className={cn("h-1.5 w-1.5 rounded-full", statusConfig[model.status].dotClass)} />
-              <span className="text-xs text-muted-foreground">{statusConfig[model.status].label}</span>
+        {models.map((model, index) => {
+          const config = statusConfig[model.status]
+          return (
+            <div
+              key={model.name}
+              className="group grid grid-cols-4 gap-4 py-2.5 border-b border-border/20 last:border-0 rounded-md px-1 -mx-1 transition-all duration-200 hover:bg-secondary/30 animate-slide-up-fade"
+              style={{ animationDelay: `${(index + 3) * 0.06}s` }}
+            >
+              <span className="text-sm text-foreground truncate">{model.name}</span>
+              <div className="flex items-center gap-1.5">
+                {/* Pulse ring dot for status */}
+                <div className="relative h-1.5 w-1.5">
+                  <div className={cn("absolute inset-0 rounded-full", config.dotClass)} />
+                  {model.status === "critical" && (
+                    <div className={cn("absolute inset-0 rounded-full animate-pulse-ring", config.dotClass)} />
+                  )}
+                </div>
+                <span className="text-xs text-muted-foreground">{config.label}</span>
+              </div>
+              <span className={cn(
+                "text-sm font-mono text-right transition-colors duration-300",
+                model.threats > 5 ? "text-destructive" : model.threats > 0 ? "text-warning" : "text-success"
+              )}>
+                {model.threats}
+              </span>
+              <span className="text-xs text-muted-foreground text-right">{model.lastScan}</span>
             </div>
-            <span className={cn(
-              "text-sm font-mono text-right",
-              model.threats > 5 ? "text-destructive" : model.threats > 0 ? "text-warning" : "text-success"
-            )}>
-              {model.threats}
-            </span>
-            <span className="text-xs text-muted-foreground text-right">{model.lastScan}</span>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

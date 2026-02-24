@@ -23,11 +23,12 @@ export default function DashboardLayout({
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary">
+        <div className="flex flex-col items-center gap-3 animate-slide-up-fade">
+          <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-primary">
             <Shield className="h-6 w-6 text-primary-foreground" />
+            <div className="absolute inset-0 rounded-xl bg-primary/40 animate-glow-pulse" />
           </div>
-          <p className="text-sm text-muted-foreground">読み込み中...</p>
+          <p className="text-sm text-muted-foreground">{"読み込み中..."}</p>
         </div>
       </div>
     )
@@ -38,8 +39,12 @@ export default function DashboardLayout({
   return (
     <div className="flex h-screen overflow-hidden">
       <SidebarNav />
-      <main className="flex-1 overflow-auto bg-background">
-        {children}
+      <main className="relative flex-1 overflow-auto bg-background">
+        {/* Subtle grid pattern overlay */}
+        <div className="pointer-events-none fixed inset-0 grid-pattern opacity-20" />
+        <div className="relative z-10">
+          {children}
+        </div>
       </main>
     </div>
   )

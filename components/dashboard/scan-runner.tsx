@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
 import { Shield, Play, CheckCircle2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -40,30 +39,34 @@ export function ScanRunner() {
   }
 
   return (
-    <div className="rounded-lg border border-border bg-card p-5">
+    <div className="rounded-lg glass-card border-border/30 p-5 animate-slide-up-fade">
       <div className="mb-4 flex items-center gap-2">
         <Shield className="h-4 w-4 text-primary" />
-        <h3 className="text-sm font-semibold text-foreground">セキュリティスキャン実行</h3>
+        <h3 className="text-sm font-semibold text-foreground">{"セキュリティスキャン実行"}</h3>
       </div>
 
       <div className="grid grid-cols-2 gap-3 mb-4">
-        {scanTypes.map((scan) => (
+        {scanTypes.map((scan, index) => (
           <button
             key={scan.id}
             onClick={() => toggleScan(scan.id)}
             disabled={scanning}
             className={cn(
-              "flex flex-col items-start gap-1 rounded-md border p-3 text-left transition-colors",
+              "flex flex-col items-start gap-1 rounded-md border p-3 text-left transition-all duration-200 animate-slide-up-fade",
               selectedScans.includes(scan.id)
-                ? "border-primary bg-primary/10"
-                : "border-border bg-secondary/50 hover:border-border hover:bg-secondary"
+                ? "border-primary/50 bg-primary/10"
+                : "border-border/30 bg-secondary/30 hover:border-border/50 hover:bg-secondary/50"
             )}
+            style={{
+              animationDelay: `${index * 0.05}s`,
+              boxShadow: selectedScans.includes(scan.id) ? "0 0 12px var(--glow-primary)" : "none",
+            }}
           >
             <div className="flex items-center gap-2">
               {selectedScans.includes(scan.id) ? (
                 <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
               ) : (
-                <div className="h-3.5 w-3.5 rounded-full border border-muted-foreground" />
+                <div className="h-3.5 w-3.5 rounded-full border border-muted-foreground/50" />
               )}
               <span className="text-xs font-medium text-foreground">{scan.label}</span>
             </div>
@@ -73,19 +76,33 @@ export function ScanRunner() {
       </div>
 
       {scanning && (
-        <div className="mb-4 flex flex-col gap-2">
+        <div className="mb-4 flex flex-col gap-2 animate-slide-up-fade">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">スキャン実行中...</span>
+            <span className="text-xs text-muted-foreground">{"スキャン実行中..."}</span>
             <span className="text-xs font-mono text-primary">{Math.min(100, Math.round(progress))}%</span>
           </div>
-          <Progress value={Math.min(100, progress)} className="h-1.5 bg-secondary" />
+          <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+            <div
+              className="h-full rounded-full bg-primary transition-all duration-300"
+              style={{
+                width: `${Math.min(100, progress)}%`,
+                boxShadow: "0 0 10px var(--glow-primary)",
+              }}
+            />
+            {/* Scan line overlay */}
+            <div className="absolute inset-0 overflow-hidden rounded-full">
+              <div
+                className="absolute h-full w-8 bg-gradient-to-r from-transparent via-primary-foreground/20 to-transparent animate-scan-line"
+              />
+            </div>
+          </div>
         </div>
       )}
 
       <Button
         onClick={runScan}
         disabled={scanning || selectedScans.length === 0}
-        className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+        className="w-full bg-primary text-primary-foreground hover:bg-primary/90 hover-lift transition-all duration-300"
       >
         <Play className="mr-2 h-3.5 w-3.5" />
         {scanning ? "スキャン中..." : "スキャン開始"}

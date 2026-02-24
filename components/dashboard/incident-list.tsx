@@ -27,15 +27,10 @@ interface Incident {
 
 const incidents: Incident[] = [
   {
-    id: "INC-2026-047",
-    title: "本番LLMに対する重大プロンプトインジェクション攻撃",
+    id: "INC-2026-047", title: "本番LLMに対する重大プロンプトインジェクション攻撃",
     description: "GPT-4本番エンドポイントを標的とした高度なプロンプトインジェクション攻撃が検出されました。攻撃はシステムプロンプトと内部指示の抽出を試みました。",
-    severity: "critical",
-    status: "investigating",
-    model: "GPT-4 本番環境",
-    assignee: "セキュリティチーム",
-    createdAt: "2026-02-21 09:12",
-    updatedAt: "2026-02-21 10:45",
+    severity: "critical", status: "investigating", model: "GPT-4 本番環境", assignee: "セキュリティチーム",
+    createdAt: "2026-02-21 09:12", updatedAt: "2026-02-21 10:45",
     timeline: [
       { time: "09:12", action: "自動モニタリングによりインシデント検知", actor: "システム" },
       { time: "09:14", action: "セキュリティチームにアラート送信", actor: "システム" },
@@ -46,15 +41,10 @@ const incidents: Incident[] = [
     ],
   },
   {
-    id: "INC-2026-046",
-    title: "カスタマーサポートBotでPIIデータ漏洩",
+    id: "INC-2026-046", title: "カスタマーサポートBotでPIIデータ漏洩",
     description: "定期モニタリング中にモデル出力から顧客PIIが検出されました。サポートBotが学習データからメールアドレスを不注意に露出しました。",
-    severity: "high",
-    status: "resolved",
-    model: "カスタマーサポートBot",
-    assignee: "データプライバシーチーム",
-    createdAt: "2026-02-20 14:30",
-    updatedAt: "2026-02-21 08:00",
+    severity: "high", status: "resolved", model: "カスタマーサポートBot", assignee: "データプライバシーチーム",
+    createdAt: "2026-02-20 14:30", updatedAt: "2026-02-21 08:00",
     timeline: [
       { time: "14:30", action: "出力モニタリングでPIIを検出", actor: "システム" },
       { time: "14:35", action: "モデル出力を一時制限", actor: "システム" },
@@ -64,30 +54,20 @@ const incidents: Incident[] = [
     ],
   },
   {
-    id: "INC-2026-045",
-    title: "レコメンドエンジンでモデルドリフト検出",
+    id: "INC-2026-045", title: "レコメンドエンジンでモデルドリフト検出",
     description: "レコメンドモデルで顕著な出力分布のシフトが検出されました。パフォーマンス指標が許容閾値を超えて劣化しています。",
-    severity: "medium",
-    status: "open",
-    model: "レコメンド v3",
-    assignee: "MLエンジニアリング",
-    createdAt: "2026-02-20 11:00",
-    updatedAt: "2026-02-20 11:00",
+    severity: "medium", status: "open", model: "レコメンド v3", assignee: "MLエンジニアリング",
+    createdAt: "2026-02-20 11:00", updatedAt: "2026-02-20 11:00",
     timeline: [
       { time: "11:00", action: "ドリフトスコアが閾値超過 (0.18 > 0.10)", actor: "システム" },
       { time: "11:05", action: "MLエンジニアリングにアラート送信", actor: "システム" },
     ],
   },
   {
-    id: "INC-2026-044",
-    title: "不正APIアクセス試行",
+    id: "INC-2026-044", title: "不正APIアクセス試行",
     description: "不明なIPレンジから内部LLMゲートウェイへの複数の不正アクセス試行が検出されました。",
-    severity: "high",
-    status: "closed",
-    model: "内部LLMゲートウェイ",
-    assignee: "セキュリティチーム",
-    createdAt: "2026-02-19 22:15",
-    updatedAt: "2026-02-20 09:30",
+    severity: "high", status: "closed", model: "内部LLMゲートウェイ", assignee: "セキュリティチーム",
+    createdAt: "2026-02-19 22:15", updatedAt: "2026-02-20 09:30",
     timeline: [
       { time: "22:15", action: "異常アクセスパターンを検知", actor: "システム" },
       { time: "22:16", action: "IPレンジを自動ブロック", actor: "システム" },
@@ -97,15 +77,10 @@ const incidents: Incident[] = [
     ],
   },
   {
-    id: "INC-2026-043",
-    title: "採用AIでバイアススコア閾値超過",
+    id: "INC-2026-043", title: "採用AIでバイアススコア閾値超過",
     description: "週次公平性監査で、採用評価AIが性別に関連する意思決定パターンで統計的に有意なバイアスを示しました。",
-    severity: "high",
-    status: "investigating",
-    model: "採用評価AI",
-    assignee: "倫理チーム",
-    createdAt: "2026-02-19 16:00",
-    updatedAt: "2026-02-20 14:00",
+    severity: "high", status: "investigating", model: "採用評価AI", assignee: "倫理チーム",
+    createdAt: "2026-02-19 16:00", updatedAt: "2026-02-20 14:00",
     timeline: [
       { time: "16:00", action: "週次公平性監査でバイアスパターン検出", actor: "システム" },
       { time: "16:10", action: "モデルを本番から一時停止", actor: "システム" },
@@ -116,10 +91,10 @@ const incidents: Incident[] = [
 ]
 
 const severityConfig = {
-  critical: { className: "bg-destructive/15 text-destructive border-destructive/30", icon: AlertTriangle },
-  high: { className: "bg-chart-4/15 text-chart-4 border-chart-4/30", icon: AlertTriangle },
-  medium: { className: "bg-warning/15 text-warning border-warning/30", icon: Shield },
-  low: { className: "bg-primary/15 text-primary border-primary/30", icon: Shield },
+  critical: { className: "bg-destructive/15 text-destructive border-destructive/30", icon: AlertTriangle, borderColor: "oklch(0.55 0.22 27)" },
+  high: { className: "bg-chart-4/15 text-chart-4 border-chart-4/30", icon: AlertTriangle, borderColor: "oklch(0.6 0.22 30)" },
+  medium: { className: "bg-warning/15 text-warning border-warning/30", icon: Shield, borderColor: "oklch(0.75 0.17 70)" },
+  low: { className: "bg-primary/15 text-primary border-primary/30", icon: Shield, borderColor: "oklch(0.62 0.18 260)" },
 }
 
 const severityLabels = { critical: "重大", high: "高", medium: "中", low: "低" }
@@ -136,15 +111,23 @@ export function IncidentList() {
 
   return (
     <div className="flex flex-col gap-3">
-      {incidents.map((incident) => {
+      {incidents.map((incident, index) => {
         const isExpanded = expandedId === incident.id
         const SeverityIcon = severityConfig[incident.severity].icon
 
         return (
-          <div key={incident.id} className="rounded-lg border border-border bg-card overflow-hidden">
+          <div
+            key={incident.id}
+            className="rounded-lg glass-card border-border/30 overflow-hidden transition-all duration-300 animate-slide-up-fade"
+            style={{
+              animationDelay: `${index * 0.06}s`,
+              borderLeftWidth: "2px",
+              borderLeftColor: severityConfig[incident.severity].borderColor,
+            }}
+          >
             <button
               onClick={() => setExpandedId(isExpanded ? null : incident.id)}
-              className="flex w-full items-center gap-4 px-5 py-4 text-left hover:bg-secondary/30 transition-colors"
+              className="flex w-full items-center gap-4 px-5 py-4 text-left hover:bg-secondary/20 transition-all duration-200"
             >
               <SeverityIcon className={cn(
                 "h-4 w-4 shrink-0",
@@ -170,16 +153,14 @@ export function IncidentList() {
                 <Badge variant="outline" className={cn("text-[10px]", statusConfig[incident.status].className)}>
                   {statusConfig[incident.status].label}
                 </Badge>
-                {isExpanded ? (
-                  <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                ) : (
+                <div className="transition-transform duration-200" style={{ transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)" }}>
                   <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                )}
+                </div>
               </div>
             </button>
 
             {isExpanded && (
-              <div className="border-t border-border px-5 py-4">
+              <div className="border-t border-border/20 px-5 py-4 animate-slide-up-fade">
                 <p className="text-sm text-muted-foreground mb-4">{incident.description}</p>
 
                 <div className="flex items-center gap-4 mb-4">
@@ -189,21 +170,25 @@ export function IncidentList() {
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Clock className="h-3.5 w-3.5 text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground">更新: {incident.updatedAt}</span>
+                    <span className="text-xs text-muted-foreground">{"更新: "}{incident.updatedAt}</span>
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-0 pl-2">
-                  <h4 className="text-xs font-semibold text-foreground mb-3">タイムライン</h4>
+                  <h4 className="text-xs font-semibold text-foreground mb-3">{"タイムライン"}</h4>
                   {incident.timeline.map((event, idx) => (
-                    <div key={idx} className="flex gap-3 relative">
+                    <div
+                      key={idx}
+                      className="flex gap-3 relative animate-slide-up-fade"
+                      style={{ animationDelay: `${idx * 0.05}s` }}
+                    >
                       <div className="flex flex-col items-center">
                         <div className={cn(
-                          "h-2 w-2 rounded-full shrink-0 mt-1.5",
+                          "h-2 w-2 rounded-full shrink-0 mt-1.5 transition-colors duration-300",
                           idx === incident.timeline.length - 1 ? "bg-primary" : "bg-muted-foreground/40"
-                        )} />
+                        )} style={idx === incident.timeline.length - 1 ? { boxShadow: "0 0 6px var(--glow-primary)" } : undefined} />
                         {idx < incident.timeline.length - 1 && (
-                          <div className="w-px flex-1 bg-border my-1" />
+                          <div className="w-px flex-1 bg-border/30 my-1" />
                         )}
                       </div>
                       <div className="pb-4">
@@ -217,19 +202,19 @@ export function IncidentList() {
                   ))}
                 </div>
 
-                <div className="flex items-center gap-2 mt-2 pt-3 border-t border-border">
+                <div className="flex items-center gap-2 mt-2 pt-3 border-t border-border/20">
                   {incident.status !== "closed" && incident.status !== "resolved" && (
                     <>
-                      <button className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors">
+                      <button className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-all duration-200 hover-lift">
                         {incident.status === "open" ? "調査開始" : "解決済みにする"}
                       </button>
-                      <button className="rounded-md border border-border bg-secondary px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
-                        担当者割当
+                      <button className="rounded-md border border-border/30 bg-secondary/50 px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
+                        {"担当者割当"}
                       </button>
                     </>
                   )}
-                  <button className="rounded-md border border-border bg-secondary px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors ml-auto">
-                    詳細レポート
+                  <button className="rounded-md border border-border/30 bg-secondary/50 px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors ml-auto">
+                    {"詳細レポート"}
                   </button>
                 </div>
               </div>

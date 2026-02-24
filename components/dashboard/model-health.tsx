@@ -70,6 +70,12 @@ const statusDot = {
   critical: "bg-destructive",
 }
 
+const statusGlow = {
+  normal: "var(--glow-success)",
+  warning: "var(--glow-warning)",
+  critical: "var(--glow-destructive)",
+}
+
 export function ModelHealth() {
   const [models, setModels] = useState<Model[]>(initialModels)
 
@@ -88,20 +94,27 @@ export function ModelHealth() {
   }, [updateMetrics])
 
   return (
-    <div className="rounded-lg border border-border bg-card p-5">
+    <div className="rounded-lg glass-card border-border/30 p-5 animate-slide-up-fade">
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-semibold text-foreground">モデルヘルスステータス</h3>
-          <p className="text-xs text-muted-foreground">リアルタイムモデル性能指標</p>
+          <h3 className="text-sm font-semibold text-foreground">{"モデルヘルスステータス"}</h3>
+          <p className="text-xs text-muted-foreground">{"リアルタイムモデル性能指標"}</p>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] text-success font-medium">LIVE</span>
-          <div className="flex h-2 w-2 rounded-full bg-success animate-pulse" />
+        <div className="flex items-center gap-1.5">
+          <div className="relative h-2 w-2">
+            <div className="absolute inset-0 rounded-full bg-success" />
+            <div className="absolute inset-0 rounded-full bg-success animate-pulse-ring" />
+          </div>
+          <span className="text-[10px] text-success font-medium uppercase tracking-wider">LIVE</span>
         </div>
       </div>
       <div className="flex flex-col gap-3">
-        {models.map((model) => (
-          <div key={model.name} className="rounded-md border border-border bg-secondary/30 p-4">
+        {models.map((model, index) => (
+          <div
+            key={model.name}
+            className="rounded-md border border-border/20 bg-secondary/20 p-4 transition-all duration-200 hover:bg-secondary/30 animate-slide-up-fade"
+            style={{ animationDelay: `${(index + 1) * 0.08}s` }}
+          >
             <div className="mb-3 flex items-center gap-2">
               <model.icon className="h-4 w-4 text-primary" />
               <span className="text-sm font-medium text-foreground">{model.name}</span>
@@ -124,8 +137,13 @@ function MetricItem({ label, value, status }: { label: string; value: string; st
     <div className="flex items-center justify-between">
       <span className="text-[11px] text-muted-foreground">{label}</span>
       <div className="flex items-center gap-1.5">
-        <div className={cn("h-1.5 w-1.5 rounded-full transition-colors", statusDot[status])} />
-        <span className={cn("text-xs font-mono transition-colors", statusColor[status])}>{value}</span>
+        <div className="relative h-1.5 w-1.5">
+          <div className={cn("absolute inset-0 rounded-full transition-colors duration-500", statusDot[status])} />
+          {status === "critical" && (
+            <div className={cn("absolute inset-0 rounded-full animate-pulse-ring", statusDot[status])} />
+          )}
+        </div>
+        <span className={cn("text-xs font-mono transition-colors duration-500", statusColor[status])}>{value}</span>
       </div>
     </div>
   )

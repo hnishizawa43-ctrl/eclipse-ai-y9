@@ -22,6 +22,7 @@ export default function DashboardPage() {
             changeType="positive"
             icon={Shield}
             description="監視対象のAIモデル"
+            index={0}
           />
           <KpiCard
             title="脅威ブロック"
@@ -30,6 +31,7 @@ export default function DashboardPage() {
             changeType="positive"
             icon={AlertTriangle}
             description="過去30日間"
+            index={1}
           />
           <KpiCard
             title="稼働率"
@@ -38,6 +40,7 @@ export default function DashboardPage() {
             changeType="positive"
             icon={Activity}
             description="システム可用性 (30日)"
+            index={2}
           />
           <KpiCard
             title="コンプライアンススコア"
@@ -46,6 +49,7 @@ export default function DashboardPage() {
             changeType="positive"
             icon={FileCheck}
             description="全規制対応"
+            index={3}
           />
         </div>
 
