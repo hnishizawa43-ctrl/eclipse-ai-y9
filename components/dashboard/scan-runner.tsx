@@ -70,7 +70,7 @@ export function ScanRunner() {
               )}
               <span className="text-xs font-medium text-foreground">{scan.label}</span>
             </div>
-            <span className="text-[10px] text-muted-foreground pl-5.5">{scan.description}</span>
+            <span className="text-[10px] text-muted-foreground pl-6">{scan.description}</span>
           </button>
         ))}
       </div>
