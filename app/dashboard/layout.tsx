@@ -3,8 +3,22 @@
 import { SidebarNav } from "@/components/dashboard/sidebar-nav"
 import { useAuth } from "@/contexts/auth-context"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useState, createContext, useContext } from "react"
 import { Shield } from "lucide-react"
+
+interface MobileSidebarContextType {
+  open: boolean
+  setOpen: (open: boolean) => void
+}
+
+const MobileSidebarContext = createContext<MobileSidebarContextType>({
+  open: false,
+  setOpen: () => {},
+})
+
+export function useMobileSidebar() {
+  return useContext(MobileSidebarContext)
+}
 
 export default function DashboardLayout({
   children,
@@ -13,6 +27,7 @@ export default function DashboardLayout({
 }) {
   const { user, loading } = useAuth()
   const router = useRouter()
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   useEffect(() => {
     if (!loading && !user) {
@@ -36,11 +51,13 @@ export default function DashboardLayout({
   if (!user) return null
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <SidebarNav />
-      <main className="flex-1 overflow-auto bg-background">
-        {children}
-      </main>
-    </div>
+    <MobileSidebarContext.Provider value={{ open: mobileOpen, setOpen: setMobileOpen }}>
+      <div className="flex h-screen overflow-hidden">
+        <SidebarNav />
+        <main className="flex-1 overflow-auto bg-background">
+          {children}
+        </main>
+      </div>
+    </MobileSidebarContext.Provider>
   )
 }

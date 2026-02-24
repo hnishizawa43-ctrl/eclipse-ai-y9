@@ -11,12 +11,12 @@ export default function VulnerabilitiesPage() {
         title="脆弱性スキャン"
         description="AIモデルのセキュリティ脆弱性を検出・評価"
       />
-      <div className="flex flex-col gap-6 p-6">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           <KpiCard
             title="脆弱性総数"
             value="23"
-            change="前回スキャン比 -4"
+            change="前回比 -4"
             changeType="positive"
             icon={Bug}
           />
@@ -28,23 +28,21 @@ export default function VulnerabilitiesPage() {
             icon={AlertTriangle}
           />
           <KpiCard
-            title="スキャン済みモデル"
+            title="スキャン済み"
             value="18/24"
             icon={Shield}
-            description="6モデルが初回スキャン待ち"
+            description="6モデルが未スキャン"
           />
           <KpiCard
-            title="最終フルスキャン"
+            title="最終スキャン"
             value="2時間前"
             icon={Clock}
-            description="次回予定: 4時間後"
+            description="次回: 4時間後"
           />
         </div>
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <ScanResultsTable />
-          </div>
+        <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-[1fr_320px]">
+          <ScanResultsTable />
           <ScanRunner />
         </div>
       </div>

@@ -61,7 +61,7 @@ const typeConfig = {
 
 export function AuditLog() {
   return (
-    <div className="rounded-lg border border-border bg-card p-5">
+    <div className="rounded-lg border border-border bg-card p-4 sm:p-5">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h3 className="text-sm font-semibold text-foreground">監査ログ</h3>
@@ -78,23 +78,23 @@ export function AuditLog() {
           return (
             <div
               key={entry.id}
-              className="flex items-center gap-3 rounded-md border border-border/50 bg-secondary/30 px-4 py-3"
+              className="flex items-start gap-3 rounded-md border border-border/50 bg-secondary/30 px-3 py-2.5 sm:items-center sm:px-4 sm:py-3"
             >
-              <Icon className={cn("h-4 w-4 shrink-0", typeConfig[entry.type].className)} />
+              <Icon className={cn("h-4 w-4 shrink-0 mt-0.5 sm:mt-0", typeConfig[entry.type].className)} />
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-foreground truncate">{entry.action}</span>
-                  <Badge variant="outline" className="text-[10px] bg-primary/10 text-primary border-primary/30 shrink-0">
+                <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
+                  <span className="text-xs sm:text-sm text-foreground">{entry.action}</span>
+                  <Badge variant="outline" className="text-[10px] bg-primary/10 text-primary border-primary/30 shrink-0 w-fit">
                     {entry.regulation}
                   </Badge>
                 </div>
                 <div className="flex items-center gap-2 mt-0.5">
-                  <span className="text-[10px] text-muted-foreground">{entry.user}</span>
+                  <span className="text-[10px] text-muted-foreground truncate">{entry.user}</span>
                   <span className="text-[10px] text-muted-foreground/50">|</span>
                   <span className="text-[10px] text-muted-foreground">{entry.timestamp}</span>
                 </div>
               </div>
-              <span className="text-[10px] font-mono text-muted-foreground shrink-0">{entry.id}</span>
+              <span className="text-[10px] font-mono text-muted-foreground shrink-0 hidden sm:inline">{entry.id}</span>
             </div>
           )
         })}

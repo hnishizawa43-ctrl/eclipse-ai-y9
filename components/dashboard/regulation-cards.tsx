@@ -87,7 +87,7 @@ export function RegulationCards() {
       {regulations.map((reg) => {
         const StatusIcon = statusConfig[reg.status].icon
         return (
-          <div key={reg.name} className="rounded-lg border border-border bg-card p-5 flex flex-col gap-4">
+          <div key={reg.name} className="rounded-lg border border-border bg-card p-4 sm:p-5 flex flex-col gap-3 sm:gap-4">
             <div className="flex items-start justify-between">
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2">

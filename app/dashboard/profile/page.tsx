@@ -81,19 +81,19 @@ export default function ProfilePage() {
         title="プロフィール"
         description="アカウント情報と活動履歴"
       />
-      <div className="flex flex-col gap-6 p-6 max-w-3xl">
+      <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6 max-w-3xl">
         {/* User Info */}
         <Card>
           <CardHeader>
-            <div className="flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground text-xl font-bold">
+            <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center sm:gap-4">
+              <div className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-primary text-primary-foreground text-lg sm:text-xl font-bold shrink-0">
                 {initials}
               </div>
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-1 items-center sm:items-start">
                 <CardTitle className="text-lg">{displayName}</CardTitle>
-                <CardDescription className="flex items-center gap-1.5">
-                  <Mail className="h-3.5 w-3.5" />
-                  {email}
+                <CardDescription className="flex items-center gap-1.5 text-xs sm:text-sm">
+                  <Mail className="h-3.5 w-3.5 shrink-0" />
+                  <span className="truncate">{email}</span>
                 </CardDescription>
                 <div className="flex items-center gap-2 mt-1">
                   <Badge variant="secondary" className="text-xs">
@@ -232,7 +232,7 @@ export default function ProfilePage() {
                   <KeyRound className="h-4 w-4 text-muted-foreground" />
                   <div>
                     <p className="text-sm font-medium text-foreground">UID</p>
-                    <p className="text-xs text-muted-foreground font-mono">{user?.uid || "-"}</p>
+                    <p className="text-xs text-muted-foreground font-mono truncate max-w-[200px] sm:max-w-none">{user?.uid || "-"}</p>
                   </div>
                 </div>
               </div>

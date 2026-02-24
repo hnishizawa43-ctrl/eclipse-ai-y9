@@ -12,8 +12,17 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  Menu,
 } from "lucide-react"
 import { useState } from "react"
+import { useIsMobile } from "@/hooks/use-mobile"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet"
+import { useMobileSidebar } from "@/app/dashboard/layout"
 
 const navItems = [
   {
@@ -43,20 +52,22 @@ const navItems = [
   },
 ]
 
-export function SidebarNav() {
+function SidebarContent({
+  collapsed,
+  setCollapsed,
+  onLinkClick,
+}: {
+  collapsed: boolean
+  setCollapsed: (v: boolean) => void
+  onLinkClick?: () => void
+}) {
   const pathname = usePathname()
-  const [collapsed, setCollapsed] = useState(false)
 
   return (
-    <aside
-      className={cn(
-        "flex flex-col border-r border-border bg-sidebar transition-all duration-300",
-        collapsed ? "w-16" : "w-60"
-      )}
-    >
+    <>
       <div className="flex items-center justify-between p-4 border-b border-sidebar-border">
         {!collapsed && (
-          <Link href="/dashboard" className="flex items-center gap-2">
+          <Link href="/dashboard" className="flex items-center gap-2" onClick={onLinkClick}>
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
               <Shield className="h-4 w-4 text-primary-foreground" />
             </div>
@@ -89,6 +100,7 @@ export function SidebarNav() {
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  onClick={onLinkClick}
                   className={cn(
                     "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                     isActive
@@ -108,6 +120,7 @@ export function SidebarNav() {
       <div className="border-t border-sidebar-border p-2">
         <Link
           href="/dashboard/settings"
+          onClick={onLinkClick}
           className={cn(
             "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
             pathname === "/dashboard/settings"
@@ -127,6 +140,54 @@ export function SidebarNav() {
           </button>
         )}
       </div>
+    </>
+  )
+}
+
+export function MobileMenuTrigger({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-secondary text-muted-foreground hover:text-foreground hover:bg-accent/10 transition-colors md:hidden"
+      aria-label="メニューを開く"
+    >
+      <Menu className="h-5 w-5" />
+    </button>
+  )
+}
+
+export function SidebarNav() {
+  const [collapsed, setCollapsed] = useState(false)
+  const isMobile = useIsMobile()
+  const { open: mobileOpen, setOpen: setMobileOpen } = useMobileSidebar()
+
+  if (isMobile) {
+    return (
+      <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+        <SheetContent side="left" className="w-64 p-0 bg-sidebar border-sidebar-border">
+          <SheetHeader className="sr-only">
+            <SheetTitle>Navigation</SheetTitle>
+          </SheetHeader>
+          <div className="flex h-full flex-col">
+            <SidebarContent
+              collapsed={false}
+              setCollapsed={() => {}}
+              onLinkClick={() => setMobileOpen(false)}
+            />
+          </div>
+        </SheetContent>
+      </Sheet>
+    )
+  }
+
+  return (
+    <aside
+      className={cn(
+        "hidden md:flex flex-col border-r border-border bg-sidebar transition-all duration-300",
+        collapsed ? "w-16" : "w-60"
+      )}
+    >
+      <SidebarContent collapsed={collapsed} setCollapsed={setCollapsed} />
     </aside>
   )
 }
