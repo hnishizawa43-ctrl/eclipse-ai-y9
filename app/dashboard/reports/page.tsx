@@ -284,7 +284,7 @@ export default function ReportsPage() {
                       fontSize: "12px",
                       color: "oklch(0.95 0.01 260)",
                     }}
-                    formatter={(value: number) => [`${value}%`, "スコア"]}
+                    formatter={(value) => [`${value}%`, "スコア"]}
                   />
                 </BarChart>
               </ResponsiveContainer>

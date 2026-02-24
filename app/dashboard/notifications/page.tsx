@@ -1,11 +1,22 @@
 "use client"
 
 import { DashboardHeader } from "@/components/dashboard/header"
-import { useNotifications, type NotificationLevel } from "@/contexts/notification-context"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { AlertTriangle, Shield, Info, Activity, Bell, Trash2, CheckCheck } from "lucide-react"
 import { useState } from "react"
+
+type NotificationLevel = "critical" | "warning" | "info" | "success"
+
+interface Notification {
+  id: string
+  title: string
+  description: string
+  level: NotificationLevel
+  category: "threat" | "compliance" | "system" | "model"
+  time: string
+  unread: boolean
+}
 
 const levelIcons: Record<NotificationLevel, typeof AlertTriangle> = {
   critical: AlertTriangle,
@@ -44,10 +55,21 @@ const categoryLabels: Record<string, string> = {
 
 type FilterLevel = "all" | NotificationLevel
 
+const staticNotifications: Notification[] = [
+  { id: "init-1", title: "高リスク脆弱性を検出", description: "モデル GPT-4o にプロンプトインジェクションの脆弱性が見つかりました。", level: "critical", category: "threat", time: "5分前", unread: true },
+  { id: "init-2", title: "スキャン完了", description: "定期セキュリティスキャンが正常に完了しました。", level: "success", category: "system", time: "1時間前", unread: true },
+  { id: "init-3", title: "コンプライアンス更新", description: "EU AI Act の新しいガイドラインが公開されました。", level: "info", category: "compliance", time: "3時間前", unread: false },
+  { id: "init-4", title: "異常トラフィック検出", description: "GPT-4 エンドポイントへの異常なリクエストパターンを検知しました。", level: "warning", category: "threat", time: "5時間前", unread: false },
+]
+
 export default function NotificationsPage() {
-  const { notifications, markRead, markAllRead, clearAll, unreadCount, simulationEnabled, setSimulationEnabled } =
-    useNotifications()
+  const [notifications, setNotifications] = useState<Notification[]>(staticNotifications)
+  const [simulationEnabled, setSimulationEnabled] = useState(false)
   const [filterLevel, setFilterLevel] = useState<FilterLevel>("all")
+  const unreadCount = notifications.filter(n => n.unread).length
+  const markRead = (id: string) => setNotifications(prev => prev.map(n => n.id === id ? { ...n, unread: false } : n))
+  const markAllRead = () => setNotifications(prev => prev.map(n => ({ ...n, unread: false })))
+  const clearAll = () => setNotifications([])
 
   const filtered =
     filterLevel === "all" ? notifications : notifications.filter((n) => n.level === filterLevel)

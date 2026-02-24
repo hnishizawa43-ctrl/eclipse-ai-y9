@@ -14,8 +14,19 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from "next/link"
 import { useAuth } from "@/contexts/auth-context"
-import { useNotifications, type NotificationLevel } from "@/contexts/notification-context"
 import { useState } from "react"
+
+type NotificationLevel = "critical" | "warning" | "info" | "success"
+
+interface SimpleNotification {
+  id: string
+  title: string
+  description: string
+  level: NotificationLevel
+  category: "threat" | "compliance" | "system" | "model"
+  time: string
+  unread: boolean
+}
 
 const levelIcons: Record<NotificationLevel, typeof AlertTriangle> = {
   critical: AlertTriangle,
@@ -40,10 +51,19 @@ const categoryLabels: Record<CategoryFilter, string> = {
   model: "モデル",
 }
 
+const staticNotifications: SimpleNotification[] = [
+  { id: "init-1", title: "高リスク脆弱性を検出", description: "モデル GPT-4o にプロンプトインジェクションの脆弱性が見つかりました。", level: "critical", category: "threat", time: "5分前", unread: true },
+  { id: "init-2", title: "スキャン完了", description: "定期セキュリティスキャンが正常に完了しました。", level: "success", category: "system", time: "1時間前", unread: true },
+  { id: "init-3", title: "コンプライアンス更新", description: "EU AI Act の新しいガイドラインが公開されました。", level: "info", category: "compliance", time: "3時間前", unread: true },
+]
+
 export function DashboardHeader({ title, description }: { title: string; description?: string }) {
   const { user, logout } = useAuth()
-  const { notifications, unreadCount, markRead, markAllRead } = useNotifications()
+  const [notifications, setNotifications] = useState<SimpleNotification[]>(staticNotifications)
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all")
+  const unreadCount = notifications.filter(n => n.unread).length
+  const markRead = (id: string) => setNotifications(prev => prev.map(n => n.id === id ? { ...n, unread: false } : n))
+  const markAllRead = () => setNotifications(prev => prev.map(n => ({ ...n, unread: false })))
 
   const displayName = user?.displayName || user?.email?.split("@")[0] || "User"
   const email = user?.email || ""
