@@ -3,6 +3,8 @@
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { useState } from "react"
+import { Download } from "lucide-react"
+import { exportToCSV, exportToJSON } from "@/lib/export-utils"
 
 interface Vulnerability {
   id: string
@@ -142,6 +144,35 @@ export function ScanResultsTable() {
               {filterLabels[level]}
             </button>
           ))}
+          <div className="ml-2 h-5 w-px bg-border" />
+          <button
+            onClick={() => exportToCSV(
+              filtered.map((v) => ({
+                ID: v.id,
+                タイトル: v.title,
+                モデル: v.model,
+                カテゴリ: v.category,
+                深刻度: severityLabels[v.severity],
+                CVSS: v.cvss,
+                ステータス: statusLabels[v.status],
+                発見日時: v.discoveredAt,
+              })),
+              "vulnerabilities"
+            )}
+            className="flex items-center gap-1.5 rounded-md border border-border bg-secondary px-2.5 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            title="CSVエクスポート"
+          >
+            <Download className="h-3 w-3" />
+            <span className="hidden lg:inline">CSV</span>
+          </button>
+          <button
+            onClick={() => exportToJSON(filtered, "vulnerabilities")}
+            className="flex items-center gap-1.5 rounded-md border border-border bg-secondary px-2.5 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            title="JSONエクスポート"
+          >
+            <Download className="h-3 w-3" />
+            <span className="hidden lg:inline">JSON</span>
+          </button>
         </div>
       </div>
       <div className="overflow-x-auto">

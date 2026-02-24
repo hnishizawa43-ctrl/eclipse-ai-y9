@@ -10,7 +10,9 @@ import {
   ChevronDown,
   ChevronUp,
   User,
+  Download,
 } from "lucide-react"
+import { exportToCSV, exportToJSON } from "@/lib/export-utils"
 
 interface Incident {
   id: string
@@ -134,8 +136,40 @@ const statusConfig = {
 export function IncidentList() {
   const [expandedId, setExpandedId] = useState<string | null>(incidents[0].id)
 
+  const handleExport = () => {
+    exportToCSV(
+      incidents.map((i) => ({
+        ID: i.id,
+        タイトル: i.title,
+        深刻度: severityLabels[i.severity],
+        ステータス: statusConfig[i.status].label,
+        モデル: i.model,
+        担当者: i.assignee,
+        作成日時: i.createdAt,
+        更新日時: i.updatedAt,
+      })),
+      "incidents"
+    )
+  }
+
   return (
     <div className="flex flex-col gap-3">
+      <div className="flex items-center justify-end gap-2">
+        <button
+          onClick={handleExport}
+          className="flex items-center gap-1.5 rounded-md border border-border bg-secondary px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <Download className="h-3 w-3" />
+          CSVエクスポート
+        </button>
+        <button
+          onClick={() => exportToJSON(incidents, "incidents")}
+          className="flex items-center gap-1.5 rounded-md border border-border bg-secondary px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <Download className="h-3 w-3" />
+          JSON
+        </button>
+      </div>
       {incidents.map((incident) => {
         const isExpanded = expandedId === incident.id
         const SeverityIcon = severityConfig[incident.severity].icon

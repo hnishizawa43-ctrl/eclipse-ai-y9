@@ -1,6 +1,9 @@
+"use client"
+
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { FileText, CheckCircle2, AlertCircle, Download } from "lucide-react"
+import { exportToCSV } from "@/lib/export-utils"
 
 const auditEntries = [
   {
@@ -67,7 +70,21 @@ export function AuditLog() {
           <h3 className="text-sm font-semibold text-foreground">監査ログ</h3>
           <p className="text-xs text-muted-foreground">最近のコンプライアンス活動</p>
         </div>
-        <button className="flex items-center gap-1.5 rounded-md border border-border bg-secondary px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
+        <button
+          onClick={() =>
+            exportToCSV(
+              auditEntries.map((e) => ({
+                ID: e.id,
+                アクション: e.action,
+                規制: e.regulation,
+                ユーザー: e.user,
+                日時: e.timestamp,
+              })),
+              "audit-log"
+            )
+          }
+          className="flex items-center gap-1.5 rounded-md border border-border bg-secondary px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        >
           <Download className="h-3 w-3" />
           エクスポート
         </button>

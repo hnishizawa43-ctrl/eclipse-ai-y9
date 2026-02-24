@@ -12,6 +12,9 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  Bell,
+  FileBarChart,
+  Bot,
 } from "lucide-react"
 import { useState } from "react"
 
@@ -40,6 +43,16 @@ const navItems = [
     label: "インシデント",
     href: "/dashboard/incidents",
     icon: AlertTriangle,
+  },
+  {
+    label: "通知",
+    href: "/dashboard/notifications",
+    icon: Bell,
+  },
+  {
+    label: "レポート",
+    href: "/dashboard/reports",
+    icon: FileBarChart,
   },
 ]
 
