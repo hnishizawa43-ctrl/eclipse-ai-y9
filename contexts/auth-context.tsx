@@ -12,7 +12,7 @@ import {
   updateProfile,
   type User,
 } from "firebase/auth"
-import { auth, isFirebaseConfigured, firebaseError } from "@/lib/firebase-client"
+import { auth, isFirebaseConfigured, firebaseError } from "@/lib/firebase"
 import { useRouter } from "next/navigation"
 
 interface AuthContextType {
